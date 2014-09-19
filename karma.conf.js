@@ -11,11 +11,15 @@ module.exports = function(config){
             'test/specs/app/**/*.js'
         ],
 
+        preprocessors: {
+            'app/js/**/*.js': ['coverage']
+        },
+
         autoWatch : true,
 
         frameworks: ['jasmine'],
 
-        reporters: ['progress', 'junit'],
+        reporters: ['progress', 'junit', 'coverage'],
 
         browsers : ['PhantomJS'],
 
@@ -24,13 +28,24 @@ module.exports = function(config){
             'karma-firefox-launcher',
             'karma-phantomjs-launcher',
             'karma-jasmine',
+            'karma-coverage',
             'karma-junit-reporter'
         ],
 
         junitReporter : {
-            outputFile: 'test/report.app.xml',
+            outputFile: 'test/results/report.app.xml',
             suite: 'unit'
+        },
+
+        coverageReporter: {
+            type: 'lcov',
+           /*type: 'json', //for istambul*/
+            dir : 'test/coverage/',
+            subdir: function(browser) {
+                return browser.toLowerCase().split(/[ /-]/)[0];
+            }
         }
+
 
     });
 };

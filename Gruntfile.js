@@ -19,6 +19,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-istanbul-coverage');
 
 
     // Project Configuration
@@ -97,6 +98,18 @@ module.exports = function (grunt) {
             'unit-ci': {
                 configFile: 'karma.conf.js',
                 singleRun: true
+            }
+        },
+        coverage: {
+            options: {
+                thresholds: {
+                    'statements': 90,
+                    'branches': 90,
+                    'lines': 90,
+                    'functions': 90
+                },
+                dir: 'coverage',
+                root: 'test'
             }
         }
     });
