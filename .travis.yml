@@ -6,3 +6,7 @@ before_script:
   - 'npm install -g grunt-cli'
   - 'npm install'
   - 'bower install'
+install:
+  pip install codecov
+after_success:
+  codecov
