@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "dependencies": {},
   "scripts": {
-    "test": "grunt test-ci & grunt coveralls"
+    "test": "grunt test-ci"
   },
   "keywords": [
     "history",
