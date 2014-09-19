@@ -2,7 +2,7 @@
 
 
 [![Build Status](https://travis-ci.org/PlainConcepts/DBHPlugin.png)](https://travis-ci.org/PlainConcepts/DBHPlugin)
-
+[![Coverage Status](https://coveralls.io/repos/PlainConcepts/DBHPlugin/badge.png)](https://coveralls.io/r/PlainConcepts/DBHPlugin)
 
 Developer Browser History Plugin (DBHPlugin) is plugin/extension for chrome and firefox which allows the user to consult the history of his visits to developer web pages.
 
