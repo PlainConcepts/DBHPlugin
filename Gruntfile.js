@@ -93,6 +93,10 @@ module.exports = function (grunt) {
         karma: {
             unit: {
                 configFile: 'karma.conf.js'
+            },
+            'unit-ci': {
+                configFile: 'karma.conf.js',
+                singleRun: true
             }
         }
     });
@@ -131,8 +135,12 @@ module.exports = function (grunt) {
         'dist:chrome'
     ]);
 
-    grunt.registerTask('test', 'Launches the tests', [
+    grunt.registerTask('test', 'Keeps listening for file updates for running the tests', [
         'karma:unit'
+    ]);
+
+    grunt.registerTask('test-ci', 'Launches the tests', [
+        'karma:unit-ci'
     ]);
 
 };

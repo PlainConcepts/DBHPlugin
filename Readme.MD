@@ -1,11 +1,14 @@
-Developer Browser History Plugin 
-==============
+# Developer Browser History Plugin 
+
+
+[![Build Status](https://travis-ci.org/PlainConcepts/DBHPlugin.png)](https://travis-ci.org/PlainConcepts/DBHPlugin)
+
 
 Developer Browser History Plugin (DBHPlugin) is plugin/extension for chrome and firefox which allows the user to consult the history of his visits to developer web pages.
 
 
-Installation from this repo
-------------
+## Installation from this repo
+
 
 Clone this repo and install the dependencies:
 
@@ -14,16 +17,15 @@ Clone this repo and install the dependencies:
 * [bower](http://bower.io/)  -- `npm install -g bower`
 * [grunt-cli](http://gruntjs.com/getting-started) -- `npm install -g grunt-cli`
 * Install node dependencies -- `npm install`
-* Install project dependencies -- `bower install` **
+* Install project dependencies -- `bower install`
 
 
 \* Make sure that Python is in your path. 
 For Windows users, MozillaBuild (https://wiki.mozilla.org/MozillaBuild) will install the correct version of Python and the MSYS package, which will make it easier to work with the SDK. 
 
-\** Optional, installed with node postinstall script.
 
-Scripts
------------
+## Scripts
+
 
 `grunt build-app`: 
 Builds the project
@@ -34,12 +36,15 @@ Builds the project and prepare the package for firefox (xpi) and chrome (folder)
 
 
 `grunt test`: 
+Keeps listening for file updates for running the tests 
+
+`grunt test-ci`: 
 Launches the tests
 
 
 
-Installation of plugins
------------
+## Installation of plugins
+
 
 ### Chrome
 Open 
