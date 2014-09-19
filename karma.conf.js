@@ -39,8 +39,8 @@ module.exports = function(config){
          */
         coverageReporter: {
             type: 'lcov',
-            dir : 'test/coverage/',
-            subdir: ''
+            dir : 'test/',
+            subdir: 'coverage/'
         }
 
 

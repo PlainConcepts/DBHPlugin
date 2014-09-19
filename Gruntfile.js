@@ -115,7 +115,7 @@ module.exports = function (grunt) {
         },
         coveralls: {
             options: {
-                src: 'test/coverage/phantomjs/lcov.info',
+                src: 'test/coverage/dflcov.info',
                 force: false
             }
         }
