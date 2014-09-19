@@ -21,7 +21,7 @@ describe('helloApp module', function() {
     describe('HelloCtrl controller', function(){
 
         it('should publish $scope.name',function() {
-            expect($scope.name).toBe("world!");
+            expect($scope.name).toBe("world2!");
         });
 
     });
