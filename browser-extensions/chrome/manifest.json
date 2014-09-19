@@ -1,0 +1,15 @@
+{
+  "name": "Developer Browser History",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Developer Browser History",
+  "background": { 
+	"page": "background.html"
+  },
+  "browser_action": {
+    "default_icon": "icon-16.png"
+  },   
+  "permissions": [
+    "tabs"
+  ]
+}
