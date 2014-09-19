@@ -3,3 +3,4 @@ node_modules
 dist
 tmp
 app/lib
+test/report.*.xml
