@@ -34,6 +34,21 @@ Builds the project and prepare the package for firefox (xpi) and chrome (folder)
 
 
 
+Installation of plugins
+-----------
+
+### Chrome
+TODO
+
+### Firefox
+TODO
+
+
+
+
+
+
+
 
 
 
