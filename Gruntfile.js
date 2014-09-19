@@ -159,8 +159,9 @@ module.exports = function (grunt) {
         'karma:unit'
     ]);
 
-    grunt.registerTask('test-ci', 'Launches the tests', [
-        'karma:unit-ci'
+    grunt.registerTask('test-ci', 'Launches the tests and coveralls for ci', [
+        'karma:unit-ci',
+        'coveralls'
     ]);
 
 };

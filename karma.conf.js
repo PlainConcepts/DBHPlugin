@@ -19,7 +19,7 @@ module.exports = function(config){
 
         frameworks: ['jasmine'],
 
-        //reporters: ['progress', 'junit', 'coverage'],
+        reporters: ['progress', 'coverage'],
 
         browsers : ['PhantomJS'],
 
@@ -30,21 +30,18 @@ module.exports = function(config){
             'karma-jasmine',
             'karma-coverage',
             'karma-junit-reporter'
-        ]
+        ],
 
         /*junitReporter : {
             outputFile: 'test/results/report.app.xml',
             suite: 'unit'
         },
-
+         */
         coverageReporter: {
             type: 'lcov',
-           *//*type: 'json', //for istambul*//*
             dir : 'test/coverage/',
-            subdir: function(browser) {
-                return browser.toLowerCase().split(/[ /-]/)[0];
-            }
-        }*/
+            subdir: ''
+        }
 
 
     });
