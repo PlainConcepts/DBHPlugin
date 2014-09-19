@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="PhantomJS 1.9.7 (Windows 8)" package="unit" timestamp="2014-09-19T12:00:49" id="0" hostname="borja-curro">
+    <properties>
+      <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34"/>
+    </properties>
+  </testsuite>
+  <testsuite name="PhantomJS 1.9.7 (Windows 8)" package="unit" timestamp="2014-09-19T12:00:49" id="0" hostname="borja-curro" tests="1" errors="0" failures="0" time="0.016">
+    <properties>
+      <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34"/>
+    </properties>
+    <testcase name="should publish $scope.name" time="0.016" classname="unit PhantomJS 1.9.7 (Windows 8).helloApp module HelloCtrl controller"/>
+    <system-out><![CDATA[
+]]></system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

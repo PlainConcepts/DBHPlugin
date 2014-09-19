@@ -33,12 +33,16 @@ Builds the project
 Builds the project and prepare the package for firefox (xpi) and chrome (folder) 
 
 
+`grunt test`: 
+Launches the tests
+
+
 
 Installation of plugins
 -----------
 
 ### Chrome
-TODO
+Open 
 
 ### Firefox
 TODO

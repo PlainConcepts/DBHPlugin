@@ -16,9 +16,9 @@ module.exports = function (grunt) {
 
     // Load grunt tasks
     require('load-grunt-tasks')(grunt);
-    grunt.loadNpmTasks('grunt-contrib-copy');
+
     grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-karma');
 
 
     // Project Configuration
@@ -89,6 +89,11 @@ module.exports = function (grunt) {
             'dist-chrome': [PATHS.DIST + PATHS.CHROME],
             'tmp-firefox': [PATHS.TMP + PATHS.FIREFOX],
             'tmp-app': [PATHS.TMP + PATHS.APP]
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
+            }
         }
     });
 
@@ -124,6 +129,10 @@ module.exports = function (grunt) {
         'build-app',
         'dist:firefox',
         'dist:chrome'
+    ]);
+
+    grunt.registerTask('test', 'Launches the tests', [
+        'karma:unit'
     ]);
 
 };
