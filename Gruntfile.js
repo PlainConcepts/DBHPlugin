@@ -20,7 +20,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-istanbul-coverage');
-    grunt.loadNpmTasks('grunt-karma-coveralls');
+    grunt.loadNpmTasks('grunt-coveralls');
 
 
     // Project Configuration
@@ -115,11 +115,8 @@ module.exports = function (grunt) {
         },
         coveralls: {
             options: {
-                debug: true,
-                coverage_dir: 'test/coverage',
-                dryRun: true,
-                force: true,
-                recursive: true
+                src: 'test/coverage/phantomjs/lcov.info',
+                force: false
             }
         }
     });
@@ -163,8 +160,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test-ci', 'Launches the tests', [
-        'karma:unit-ci',
-        'coveralls'
+        'karma:unit-ci'
     ]);
 
 };
