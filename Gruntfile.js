@@ -160,7 +160,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test-ci', 'Launches the tests and coveralls for ci', [
-        'karma:unit-ci'
+        'karma:unit-ci',
+        'coveralls'
     ]);
 
 };

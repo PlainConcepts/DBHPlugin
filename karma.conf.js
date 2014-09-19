@@ -1,9 +1,9 @@
-module.exports = function(config){
+module.exports = function (config) {
     config.set({
 
-        basePath : './',
+        basePath: './',
 
-        files : [
+        files: [
             'app/lib/angular/angular.js',
             'app/lib/angular-mocks/angular-mocks.js',
             'app/js/app.js',
@@ -15,15 +15,15 @@ module.exports = function(config){
             'app/js/**/*.js': ['coverage']
         },
 
-        autoWatch : true,
+        autoWatch: true,
 
         frameworks: ['jasmine'],
 
-        reporters: ['progress','coverage', 'coveralls'],
+        reporters: ['progress', 'coverage', 'coveralls'],
 
-        browsers : ['PhantomJS'],
+        browsers: ['PhantomJS'],
 
-        plugins : [
+        plugins: [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-phantomjs-launcher',
@@ -33,14 +33,9 @@ module.exports = function(config){
             'karma-junit-reporter'
         ],
 
-        /*junitReporter : {
-            outputFile: 'test/results/report.app.xml',
-            suite: 'unit'
-        },
-         */
         coverageReporter: {
             type: 'lcov',
-            dir : 'test/',
+            dir: 'test/',
             subdir: 'coverage/'
         }
 
