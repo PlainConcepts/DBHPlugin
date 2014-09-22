@@ -6,3 +6,5 @@ before_script:
   - 'npm install -g grunt-cli'
   - 'npm install'
   - 'bower install'
+script: "npm run-script test-ci"
+after_script: "npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls"

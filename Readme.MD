@@ -39,7 +39,7 @@ Builds the project and prepare the package for firefox (xpi) and chrome (folder)
 Keeps listening for file updates for running the tests 
 
 `grunt test-ci`: 
-Launches the tests
+Run the tests
 
 
 
@@ -47,7 +47,7 @@ Launches the tests
 
 
 ### Chrome
-Open 
+TODO 
 
 ### Firefox
 TODO

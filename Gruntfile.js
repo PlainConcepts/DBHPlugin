@@ -112,12 +112,6 @@ module.exports = function (grunt) {
                 dir: 'coverage',
                 root: 'test'
             }
-        },
-        coveralls: {
-            options: {
-                src: 'test/coverage/dflcov.info',
-                force: false
-            }
         }
     });
 
@@ -160,8 +154,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test-ci', 'Launches the tests and coveralls for ci', [
-        'karma:unit-ci',
-        'coveralls'
+        'karma:unit-ci'
     ]);
 
 };
