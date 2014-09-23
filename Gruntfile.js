@@ -130,7 +130,7 @@ module.exports = function (grunt) {
         'clean:tmp-firefox',
         'copy:tmp-firefox',
         'mozilla-addon-sdk',
-        'mozilla-cfx-xpi'
+        'mozilla-cfx-xpi' 
     ]);
 
     grunt.registerTask('dist:chrome', 'Internal. Do not use directly', [
