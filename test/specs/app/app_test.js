@@ -1,28 +1,31 @@
-'use strict';
+(function () {
+    'use strict';
 
-describe('helloApp module', function() {
+    describe('helloApp module', function () {
 
-    var $scope,
-        $helloCtrl;
+        var $scope,
+            $helloCtrl;
 
-    beforeEach(module('helloApp'));
+        beforeEach(module('helloApp'));
 
 
-    beforeEach(inject(function ($rootScope, $controller) {
+        beforeEach(inject(function ($rootScope, $controller) {
 
-        $scope = $rootScope.$new();
+            $scope = $rootScope.$new();
 
-        $helloCtrl = $controller('HelloCtrl', {
-            $scope: $scope
+            $helloCtrl = $controller('HelloCtrl', {
+                $scope: $scope
+            });
+
+        }));
+
+        describe('HelloCtrl controller', function () {
+
+            it('should publish $scope.name', function () {
+                expect($scope.name).toBe("world!");
+            });
+
         });
-
-    }));
-
-    describe('HelloCtrl controller', function(){
-
-        it('should publish $scope.name',function() {
-            expect($scope.name).toBe("world!");
-        });
-
     });
-});
+
+}());

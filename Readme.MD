@@ -30,16 +30,17 @@ For Windows users, MozillaBuild (https://wiki.mozilla.org/MozillaBuild) will ins
 `grunt build-app`: 
 Builds the project
 
-
 `grunt dist`: 
-Builds the project and prepare the package for firefox (xpi) and chrome (folder) 
+Builds the project and prepare the package for firefox (xpi) and chrome (zip)
 
+`grunt dev`: 
+dev stuff: Keeps listening for file updates to run jshint, ...TODO: open chrome, livereload, sass compilation
 
 `grunt test`: 
 Keeps listening for file updates for running the tests 
 
 `grunt test-ci`: 
-Run the tests
+Run jshint and the tests
 
 
 
