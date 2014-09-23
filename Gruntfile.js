@@ -21,6 +21,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-istanbul-coverage');
     grunt.loadNpmTasks('grunt-coveralls');
+    grunt.loadNpmTasks('grunt-crx');
 
 
     // Project Configuration
@@ -34,11 +35,11 @@ module.exports = function (grunt) {
                 ]
 
             },
-            'dist-chrome': {
+            'tmp-chrome': {
                 files: [
-                    {expand: true, cwd: PATHS.ICONS, src: ['**'], dest: PATHS.DIST + PATHS.CHROME  },
-                    {expand: true, cwd: PATHS.TMP + PATHS.APP, src: ['**'], dest: PATHS.DIST + PATHS.CHROME  },
-                    {expand: true, cwd: PATHS.BROWSER_EXTENSIONS + PATHS.CHROME, src: ['**'], dest: PATHS.DIST + PATHS.CHROME  }
+                    {expand: true, cwd: PATHS.ICONS, src: ['**'], dest: PATHS.TMP + PATHS.CHROME  },
+                    {expand: true, cwd: PATHS.TMP + PATHS.APP, src: ['**'], dest: PATHS.TMP + PATHS.CHROME  },
+                    {expand: true, cwd: PATHS.BROWSER_EXTENSIONS + PATHS.CHROME, src: ['**'], dest: PATHS.TMP + PATHS.CHROME  }
                 ]
 
             },
@@ -62,6 +63,13 @@ module.exports = function (grunt) {
                     extension_dir: PATHS.TMP + PATHS.FIREFOX,
                     dist_dir: PATHS.DIST + PATHS.FIREFOX
                 }
+            }
+        },
+        crx: {
+            plugin: {
+                "src": PATHS.TMP + PATHS.CHROME,
+                "dest":  PATHS.DIST + PATHS.CHROME,
+                "privateKey": "./chrome.pem"
             }
         },
         useminPrepare: {
@@ -88,7 +96,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            'dist-chrome': [PATHS.DIST + PATHS.CHROME],
+            'tmp-chrome': [PATHS.TMP + PATHS.CHROME],
             'tmp-firefox': [PATHS.TMP + PATHS.FIREFOX],
             'tmp-app': [PATHS.TMP + PATHS.APP]
         },
@@ -126,8 +134,9 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('dist:chrome', 'Internal. Do not use directly', [
-        'clean:dist-chrome',
-        'copy:dist-chrome'
+        'clean:tmp-chrome',
+        'copy:tmp-chrome',
+        'crx:plugin'
     ]);
 
 
@@ -145,8 +154,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', 'Builds the project and prepare the package for firefox (xpi) and chrome (folder)', [
         'build-app',
-        'dist:firefox',
-        'dist:chrome'
+        'dist:firefox'/*,
+        'dist:chrome'*/
     ]);
 
     grunt.registerTask('test', 'Keeps listening for file updates for running the tests', [

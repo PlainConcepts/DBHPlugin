@@ -1,25 +1,26 @@
 language: node_js
 node_js:
-  - '0.10'
-
+- '0.10'
 before_install:
-  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-  - sudo apt-get update
-  - sudo apt-get install google-chrome-stable
-
+- wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+- sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+- sudo apt-get update
+- sudo apt-get install google-chrome-stable
 before_script:
-  - 'npm install -g bower'
-  - 'npm install -g grunt-cli'
-  - 'npm install'
-  - 'bower install'
-
+- npm install -g bower
+- npm install -g grunt-cli
+- npm install
+- bower install
 script:
-  - "npm run-script test-ci"
-
+- npm run-script test-ci
+- npm run-script dist
 after_script:
-  - "npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls"
-
-after_success:
-  - which google-chrome
-  - echo `which google-chrome`
+- npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls
+deploy:
+  provider: releases
+  api_key:
+    secure: CL2yGJtkUvkP1X2oiMSBlwK7EgmrdN5YNyen5i6mUiloQSi3szBLEKoIjy0E2YLk0ScIjyQJgJQrmP4Dx+soyX0NHYOePZlNQf8ZdbMfzKNumAglG94YThWa3skcBf5rwdvQNXfQR5KruIb4q0E/plV0b44C2ezzF4V3bRgjpgk=
+  file: ./dist/firefox/developer_browser_history.xpi
+  skip_cleanup: true
+  on:
+    repo: PlainConcepts/DBHPlugin

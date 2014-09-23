@@ -5,3 +5,4 @@ tmp
 app/lib
 test/results
 test/coverage
+chrome.pem
