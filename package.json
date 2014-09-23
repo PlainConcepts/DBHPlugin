@@ -2,7 +2,6 @@
   "name": "DBHPlugin",
   "author": "PlainConcepts",
   "version": "0.0.1",
-  "dependencies": {},
   "scripts": {
     "test": "grunt test",
     "test-ci": "grunt test-ci"
@@ -13,6 +12,8 @@
     "firefox extension",
     "chrome plugin"
   ],
+  "dependencies": {
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "~0.2.0",
