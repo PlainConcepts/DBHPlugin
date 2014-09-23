@@ -26,5 +26,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: PlainConcepts/DBHPlugin
-    tags: true
     all_branches: true
