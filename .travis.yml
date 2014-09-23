@@ -20,10 +20,12 @@ before_deploy:
 - git fetch --tags
 deploy:
   provider: releases
+  edge: true
   api_key:
     secure: CL2yGJtkUvkP1X2oiMSBlwK7EgmrdN5YNyen5i6mUiloQSi3szBLEKoIjy0E2YLk0ScIjyQJgJQrmP4Dx+soyX0NHYOePZlNQf8ZdbMfzKNumAglG94YThWa3skcBf5rwdvQNXfQR5KruIb4q0E/plV0b44C2ezzF4V3bRgjpgk=
   file: ./dist/firefox/developer_browser_history.xpi
   skip_cleanup: true
   on:
     repo: PlainConcepts/DBHPlugin
+    tags: true
     all_branches: true
