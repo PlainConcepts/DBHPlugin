@@ -23,7 +23,9 @@ deploy:
   edge: true
   api_key:
     secure: CL2yGJtkUvkP1X2oiMSBlwK7EgmrdN5YNyen5i6mUiloQSi3szBLEKoIjy0E2YLk0ScIjyQJgJQrmP4Dx+soyX0NHYOePZlNQf8ZdbMfzKNumAglG94YThWa3skcBf5rwdvQNXfQR5KruIb4q0E/plV0b44C2ezzF4V3bRgjpgk=
-  file: ./dist/firefox/developer_browser_history.xpi
+  file:
+    - ./dist/firefox/dbhplugin_firefox.xpi
+    - ./dist/chrome/dbhplugin_chrome.zip
   skip_cleanup: true
   on:
     repo: PlainConcepts/DBHPlugin

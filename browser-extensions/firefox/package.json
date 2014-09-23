@@ -1,8 +1,8 @@
 {
-  "name": "developer_browser_history",
-  "title": "Developer Browser History",
+  "name": "dbhplugin_firefox",
+  "title": "Developer Browser History Plugin",
   "id": "kjsds-sdfd445ddsd",
-  "description": "Developer Browser History",
+  "description": "Developer Browser History Plugin for Firefox",
   "author": "PlainConcepts",
   "version": "0.1"
 }
