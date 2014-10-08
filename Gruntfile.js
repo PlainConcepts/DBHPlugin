@@ -15,7 +15,9 @@
             FIREFOX: "firefox/",
             FIREFOX_APP: "firefox/data/",
             CHROME: "chrome/",
-            CHROME_ZIP_NAME: "dbhplugin_chrome.zip"
+            CHROME_ZIP_NAME: "dbhplugin_chrome.zip",
+            CHROME_DIST_FOLDER: "dbhplugin_chrome/",
+            CHROME_CRX_FOLDER: "crx/"
         };
 
         // Load grunt tasks
@@ -87,6 +89,13 @@
                     files: [
                         {expand: true, cwd: PATHS.APP, src: ['**', '!**/js/**', '!**/lib/**'], dest: PATHS.TMP + PATHS.APP  }
                     ]
+                },
+                'dist-chrome-folder': {
+                    files: [
+                        {expand: true, cwd: PATHS.APP, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER},
+                        {expand: true, cwd: PATHS.ICONS, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER},
+                        {expand: true, cwd: PATHS.BROWSER_EXTENSIONS + PATHS.CHROME, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER }
+                    ]
                 }
             },
             "mozilla-addon-sdk": {
@@ -108,7 +117,7 @@
             crx: {
                 plugin: {
                     "src": PATHS.TMP + PATHS.CHROME,
-                    "dest": PATHS.DIST + PATHS.CHROME,
+                    "dest": PATHS.DIST + PATHS.CHROME + PATHS.CHROME_CRX_FOLDER,
                     "privateKey": "./chrome.pem"
                 }
             },
@@ -146,11 +155,14 @@
                 }
             },
             clean: {
-                'dist-chrome': [PATHS.DIST + PATHS.CHROME],
+                'dist-chrome-zip': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_ZIP_NAME],
+                'dist-chrome-folder': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER],
+                'dist-chrome-crx': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_CRX_FOLDER],
                 'tmp-chrome': [PATHS.TMP + PATHS.CHROME],
                 'dist-firefox': [PATHS.DIST + PATHS.FIREFOX],
                 'tmp-firefox': [PATHS.TMP + PATHS.FIREFOX],
                 'tmp-app': [PATHS.TMP + PATHS.APP]
+
             },
             karma: {
                 unit: {
@@ -178,22 +190,6 @@
 
         // Grunt internal tasks
 
-        grunt.registerTask('dist:firefox', 'Internal. Do not use directly', [
-            'clean:dist-firefox',
-            'copy:tmp-firefox',
-            'mozilla-addon-sdk',
-            'mozilla-cfx-xpi',
-            'clean:tmp-firefox'
-        ]);
-
-        grunt.registerTask('dist:chrome', 'Internal. Do not use directly', [
-            'clean:dist-chrome',
-            'copy:tmp-chrome',
-            //'crx:plugin'
-            'compress:chrome',
-            'clean:tmp-chrome'
-        ]);
-
 
         // Grunt public tasks
 
@@ -202,30 +198,38 @@
             'useminPrepare',
             'copy:tmp-app',
             'concat',
-            //'uglify',
+            'uglify',
             'rev',
             'usemin'
         ]);
 
         grunt.registerTask('dist-firefox', 'Builds the project and prepare the package for firefox (xpi)', [
             'build-app',
-            'dist:firefox'
+            'clean:dist-firefox',
+            'copy:tmp-firefox',
+            'mozilla-addon-sdk',
+            'mozilla-cfx-xpi',
+            'clean:tmp-firefox'
         ]);
 
-        grunt.registerTask('dist-chrome', 'Builds the project and prepare the package for chrome (folder)', [
+        grunt.registerTask('dist-chrome-zip', 'Builds the project and prepare the package for chrome (zip)', [
+            'clean:dist-chrome-zip',
             'build-app',
-            'dist:chrome'
+            'copy:tmp-chrome',
+            'compress:chrome',
+            'clean:tmp-chrome'
         ]);
 
-        grunt.registerTask('dist-all', 'Builds the project and prepare the package for firefox (xpi) and chrome (folder)', [
+        grunt.registerTask('dist-chrome-folder', 'Builds the project and prepare the package for chrome (folder)', [
+            'copy:dist-chrome-folder'
+        ]);
+
+        grunt.registerTask('dist-chrome-crx', 'Builds the project and prepare the package for chrome (crx)', [
+            'clean:dist-chrome-crx',
             'build-app',
-            'dist:firefox',
-            'dist:chrome'
-        ]);
-
-        grunt.registerTask('dev', 'dev stuff: Keeps listening for file updates to run jshint, ...TODO: open chrome, livereload, sass compilation', [
-            'jshint',
-            'concurrent:dev'
+            'copy:tmp-chrome',
+            'crx:plugin',
+            'clean:tmp-chrome'
         ]);
 
         grunt.registerTask('test', 'Keeps listening for file updates to run tests', [
