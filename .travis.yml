@@ -13,7 +13,7 @@ before_script:
 - bower install
 script:
 - npm run-script test-ci
-- npm run-script dist
+- npm run-script dist-all
 after_script:
 - npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls
 before_deploy:

@@ -21,11 +21,19 @@
 
         describe('HelloCtrl controller', function () {
 
-            it('should publish $scope.name', function () {
+            xit('should publish $scope.name', function () {
                 expect($scope.name).toBe("world2!");
             });
 
         });
+    });
+
+    describe('Dummy test', function () {
+
+        it('1 should be 1', function () {
+            expect(1).toBe(1);
+        });
+
     });
 
 }());

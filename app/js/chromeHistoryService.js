@@ -14,7 +14,7 @@
                     var query = {
                         text: '',
                         startTime: 0,
-                        endTime: (new Date).getTime()
+                        endTime: new Date.getTime()
                     };
 
                     chrome.history.search(query, function (results) {
