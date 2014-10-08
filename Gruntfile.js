@@ -202,12 +202,22 @@
             'useminPrepare',
             'copy:tmp-app',
             'concat',
-            'uglify',
+            //'uglify',
             'rev',
             'usemin'
         ]);
 
-        grunt.registerTask('dist', 'Builds the project and prepare the package for firefox (xpi) and chrome (folder)', [
+        grunt.registerTask('dist-firefox', 'Builds the project and prepare the package for firefox (xpi)', [
+            'build-app',
+            'dist:firefox'
+        ]);
+
+        grunt.registerTask('dist-chrome', 'Builds the project and prepare the package for chrome (folder)', [
+            'build-app',
+            'dist:chrome'
+        ]);
+
+        grunt.registerTask('dist-all', 'Builds the project and prepare the package for firefox (xpi) and chrome (folder)', [
             'build-app',
             'dist:firefox',
             'dist:chrome'
