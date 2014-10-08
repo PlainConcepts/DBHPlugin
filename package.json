@@ -25,6 +25,7 @@
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-connect": "~0.7.1",
     "grunt-coveralls": "^1.0.0",
     "grunt-crx": "^0.3.3",
     "grunt-istanbul-coverage": "^0.1.0",
@@ -43,6 +44,7 @@
     "karma-jasmine": "^0.1.5",
     "karma-junit-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^0.1.4",
-    "load-grunt-tasks": "~0.1.0"
+    "load-grunt-tasks": "~0.1.0",
+    "time-grunt": "~0.3.1"
   }
 }

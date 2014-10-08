@@ -1,5 +1,7 @@
 ﻿(function () {
 
+    'use strict';
+
     angular
         .module('DBHPluginApp')
         .service('ChromeHistoryService', ['$q', function ($q) {
@@ -24,7 +26,7 @@
                         });
                     }
                     else {
-                        deferred.reject('chrome.history not available2');
+                        deferred.reject('chrome.history not available');
                     }
 
                     return deferred.promise;

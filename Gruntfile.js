@@ -23,6 +23,10 @@
         // Load grunt tasks
         require('load-grunt-tasks')(grunt);
 
+
+        // Time how long tasks take. Can help when optimizing build times
+        require('time-grunt')(grunt);
+
         grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
         grunt.loadNpmTasks('grunt-karma');
         grunt.loadNpmTasks('grunt-istanbul-coverage');
@@ -34,38 +38,67 @@
 
         // Project Configuration
         grunt.initConfig({
+            config: {
+                distchrome: PATHS.DIST +  PATHS.CHROME +  PATHS.CHROME_DIST_FOLDER
+            },
             concurrent: {
                 dev: ['watch:scripts'],
                 options: {
                     logConcurrentOutput: true
                 }
             },
+            // Watches files for changes and runs tasks based on the changed files
             watch: {
+                'dist-chrome-folder': {
+                    files: [PATHS.APP + '**' ],
+                    tasks: ['copy:dist-chrome-folder']
+                },
                 scripts: {
-                    files: ['Gruntfile.js', 'app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
-                    tasks: ['jshint']
+                    files: ['app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
+                    tasks: ['jshint'],
+                    options: {
+                        livereload: true
+                    }
+                },
+                livereload: {
+                    options: {
+                        livereload: '<%= connect.options.livereload %>'
+                    },
+                    files: [
+                        '<%= config.distchrome %>/*.html',
+                        '<%= config.distchrome %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                        '<%= config.distchrome %>/manifest.json',
+                        '<%= config.distchrome %>/js/{,*/}*.js',
+                        '<%= config.distchrome %>/lib/{,*/}*.js'
+                    ]
+                }
+            },
+
+            // Grunt server and debug server setting
+            connect: {
+                options: {
+                    port: 9000,
+                    livereload: 35729,
+                    // change this to '0.0.0.0' to access the server from outside
+                    hostname: 'localhost'
+                },
+                chrome: {
+                    options: {
+                        open: false,
+                        base: [
+                            '<%= config.distchrome %>'
+                        ]
+                    }
                 }
             },
             jshint: {
-                all: ['Gruntfile.js', 'app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
+                all: [
+                    'app/js/{,*/}*.js',
+                    'test/specs/{,*/}*.js'
+                ],
                 options: {
                     reporter: require('jshint-stylish'),
-                    "globals": {
-                        "require": true,
-                        "angular": false,
-                        "afterEach": false,
-                        "beforeEach": false,
-                        "module": false,
-                        "describe": false,
-                        "expect": false,
-                        "inject": false,
-                        "it": false,
-                        "jasmine": false,
-                        "runs": false,
-                        "spyOn": false,
-                        "waitsFor": false,
-                        "xdescribe": false
-                    }
+                    jshintrc: '.jshintrc'
                 }
             },
             copy: {
@@ -220,8 +253,11 @@
             'clean:tmp-chrome'
         ]);
 
-        grunt.registerTask('dist-chrome-folder', 'Builds the project and prepare the package for chrome (folder)', [
-            'copy:dist-chrome-folder'
+        grunt.registerTask('dev-chrome', 'dev environment for chrome', [
+            'jshint',
+            'copy:dist-chrome-folder',
+            //'connect:chrome',
+            'watch:dist-chrome-folder'
         ]);
 
         grunt.registerTask('dist-chrome-crx', 'Builds the project and prepare the package for chrome (crx)', [

@@ -22,7 +22,7 @@
         describe('HelloCtrl controller', function () {
 
             xit('should publish $scope.name', function () {
-                expect($scope.name).toBe("world2!");
+                expect($scope.name).toBe('world2!');
             });
 
         });
