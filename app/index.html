@@ -6,7 +6,14 @@
 </head>
 <body ng-controller="HistoryController">
     <div>
-        Filtered Urls: {{filteredUrls}}
+        <h1>Filtered Urls:</h1>
+        <ul>
+            <li ng-repeat="filteredUrl in filteredUrls">
+               <span>title:</span><span ng-bind="filteredUrl.title"></span>
+               &nbsp;
+               <span>url:</span><span ng-bind="filteredUrl.url"></span>
+            </li>
+        </ul>
     </div>
 
 

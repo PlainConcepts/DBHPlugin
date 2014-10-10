@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module("DBHPluginApp", []);
+    angular.module('DBHPluginApp', []);
 
 
 }());
