@@ -9,6 +9,7 @@
         var PATHS = {
             APP: "app/",
             DIST: "dist/",
+            TEST: "test/",
             ICONS: "icons/",
             TMP: "tmp/",
             BROWSER_EXTENSIONS: "browser-extensions/",
@@ -25,7 +26,7 @@
 
 
         // Time how long tasks take. Can help when optimizing build times
-        require('time-grunt')(grunt);
+        //require('time-grunt')(grunt);
 
         grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
         grunt.loadNpmTasks('grunt-karma');
@@ -34,7 +35,7 @@
         grunt.loadNpmTasks('grunt-crx');
         grunt.loadNpmTasks('grunt-contrib-compress');
         grunt.loadNpmTasks('grunt-contrib-watch');
-
+        grunt.loadNpmTasks('grunt-sync');
 
         // Project Configuration
         grunt.initConfig({
@@ -42,35 +43,24 @@
                 distchrome: PATHS.DIST +  PATHS.CHROME +  PATHS.CHROME_DIST_FOLDER
             },
             concurrent: {
-                dev: ['watch:scripts'],
+                dev: ['watch', 'karma:unit-server'],
                 options: {
                     logConcurrentOutput: true
                 }
             },
             // Watches files for changes and runs tasks based on the changed files
             watch: {
-                'dist-chrome-folder': {
-                    files: [PATHS.APP + '**' ],
-                    tasks: ['copy:dist-chrome-folder']
+                'src': {
+                    files: [PATHS.APP + '**' , '!' + PATHS.APP  + '**/js/**', '!' + PATHS.APP  +'**/lib/**'],
+                    tasks: ['sync:dist-chrome-folder']
                 },
-                scripts: {
-                    files: ['app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
-                    tasks: ['jshint'],
-                    options: {
-                        livereload: true
-                    }
+                'js-src': {
+                    files: [PATHS.APP + 'js/{,*/}*.js'],
+                    tasks: ['sync:dist-chrome-folder', 'jshint']
                 },
-                livereload: {
-                    options: {
-                        livereload: '<%= connect.options.livereload %>'
-                    },
-                    files: [
-                        '<%= config.distchrome %>/*.html',
-                        '<%= config.distchrome %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                        '<%= config.distchrome %>/manifest.json',
-                        '<%= config.distchrome %>/js/{,*/}*.js',
-                        '<%= config.distchrome %>/lib/{,*/}*.js'
-                    ]
+                'js-test': {
+                    files: [PATHS.TEST + 'specs/{,*/}*.js'],
+                    tasks: ['jshint']
                 }
             },
 
@@ -122,7 +112,9 @@
                     files: [
                         {expand: true, cwd: PATHS.APP, src: ['**', '!**/js/**', '!**/lib/**'], dest: PATHS.TMP + PATHS.APP  }
                     ]
-                },
+                }
+            },
+            sync: {
                 'dist-chrome-folder': {
                     files: [
                         {expand: true, cwd: PATHS.APP, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER},
@@ -198,12 +190,21 @@
 
             },
             karma: {
-                unit: {
+                options: {
                     configFile: 'karma.conf.js'
                 },
-                'unit-ci': {
-                    configFile: 'karma.conf.js',
+                'unit-server': {
+
+                },
+                'unit-chrome': {
+                    browsers: ['Chrome']
+                },
+                'unit-run': {
                     singleRun: true
+                },
+                'unit-run-coverage': {
+                    singleRun: true,
+                    reporters: ['progress', 'coverage']
                 }
             },
             coverage: {
@@ -221,10 +222,11 @@
         });
 
 
-        // Grunt internal tasks
+
+        // GRUNT PUBLIC TASKS
 
 
-        // Grunt public tasks
+        //------------------- BUILD & DIST ----------------
 
         grunt.registerTask('build-app', 'Builds the project', [
             'clean:tmp-app',
@@ -253,13 +255,6 @@
             'clean:tmp-chrome'
         ]);
 
-        grunt.registerTask('dev-chrome', 'dev environment for chrome', [
-            'jshint',
-            'copy:dist-chrome-folder',
-            //'connect:chrome',
-            'watch:dist-chrome-folder'
-        ]);
-
         grunt.registerTask('dist-chrome-crx', 'Builds the project and prepare the package for chrome (crx)', [
             'clean:dist-chrome-crx',
             'build-app',
@@ -268,17 +263,33 @@
             'clean:tmp-chrome'
         ]);
 
-        grunt.registerTask('test', 'Keeps listening for file updates to run tests', [
-            'karma:unit'
+        //------------------- DEV ----------------
+
+        grunt.registerTask('dev-chrome', 'dev environment for chrome', [
+            'jshint',
+            'sync:dist-chrome-folder',
+            'concurrent:dev'
         ]);
 
-        grunt.registerTask('test-ci', 'Launches the tests and coveralls for ci', [
-            'jshint',
-            'karma:unit-ci'
+        //------------------- TEST ----------------
+
+        grunt.registerTask('test-server', 'Keeps listening for file updates to run tests', [
+            'karma:unit-server'
         ]);
+
+        grunt.registerTask('test-chrome', 'Keeps listening for file updates to run tests in chrome for debugging', [
+            'karma:unit-chrome'
+        ]);
+
+        grunt.registerTask('test-run', 'Launches the tests and coveralls', [
+            'jshint',
+            'karma:unit-run-coverage'
+        ]);
+
+        //------------------- DEFAULT ----------------
 
         grunt.registerTask('default', [
-            'dev'
+            'dev-chrome'
         ]);
 
     };

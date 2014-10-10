@@ -12,7 +12,7 @@
                 return false;
             }
 
-            //TODO: Implement2
+            //TODO: Implement
             var firefoxHistoryService = {};
 
             if (browserIsChrome()) {

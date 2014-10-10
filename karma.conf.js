@@ -20,7 +20,7 @@ module.exports = function (config) {
 
         frameworks: ['jasmine'],
 
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress'],
 
         browsers: ['PhantomJS'],
 

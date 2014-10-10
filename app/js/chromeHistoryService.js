@@ -26,12 +26,11 @@
                         });
                     }
                     else {
-                        deferred.reject('chrome.history not available');
+                        deferred.reject('chrome.history  not available');
                     }
 
                     return deferred.promise;
                 };
-
 
                 return {
                     getFilteredHistory: getFilteredHistory

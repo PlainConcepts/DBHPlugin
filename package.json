@@ -12,7 +12,9 @@
     "firefox extension",
     "chrome plugin"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "grunt-sync": "^0.2.0"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "~0.2.0",
