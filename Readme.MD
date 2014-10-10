@@ -26,26 +26,42 @@ For Windows users, MozillaBuild (https://wiki.mozilla.org/MozillaBuild) will ins
 
 ## Scripts
 
+### build & dist
 
 `grunt build-app`: 
 Builds the project
 
-`grunt dist`: 
-Builds the project and prepare the package for firefox (xpi) and chrome (zip)
+`grunt dist-firefox`: 
+Builds the project and prepare the package for firefox (xpi)
 
-`grunt dev`: 
-dev stuff: Keeps listening for file updates to run jshint, ...TODO: open chrome, livereload, sass compilation
+`grunt dist-chrome-zip`: 
+Builds the project and prepare the package for chrome (zip)
 
-`grunt test`: 
-Keeps listening for file updates for running the tests 
+`grunt dist-chrome-crx`: 
+Builds the project and prepare the package for chrome (crx)
+
+
+### dev
+
+`grunt dev-chrome`: 
+dev environment for chrome: jshint, run tests, sync source to dist/chrome folder
+
+
+### test
+
+`grunt test-server`: 
+Keeps listening for file updates to run tests
+
+`grunt test-chrome`: 
+Keeps listening for file updates to run tests in chrome for debugging
 
 `grunt test-ci`: 
-Run jshint and the tests
-
+Launches the tests and coveralls for the ci build
 
 
 ## Installation of plugins
 
+Download it from [github releases](https://github.com/PlainConcepts/DBHPlugin/releases) 
 
 ### Chrome
 TODO 

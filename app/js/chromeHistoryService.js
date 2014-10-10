@@ -1,5 +1,6 @@
-﻿
-(function () {
+﻿(function () {
+
+    'use strict';
 
     angular
         .module('DBHPluginApp')
@@ -7,37 +8,38 @@
 
             var ChromeHistory = (function () {
 
-            var getFilteredHistory = function () {
-                var deferred = $q.defer();
+                var getFilteredHistory = function () {
 
-                if (chrome.history) {
-                    var query = {
-                        text: '',
-                        startTime: 0,
-                        endTime: (new Date).getTime()
-                    };
+                    var deferred = $q.defer();
 
-                    chrome.history.search(query, function (results) {
-                        console.log(results);
-                        deferred.resolve(results);
-                    });
-                }
-                else {
-                    deferred.reject('chrome.history not available');
-                }
+                    if (chrome.history) {
+                        var now = new Date().getTime(),
+                            query = {
+                                text: '',
+                                startTime: 0,
+                                endTime: now
+                            };
 
-                return deferred.promise;
-            };
+                        chrome.history.search(query, function (results) {
+                            console.log(results);
+                            deferred.resolve(results);
+                        });
+                    }
+                    else {
+                        deferred.reject('chrome.history  not available');
+                    }
 
+                    return deferred.promise;
+                };
 
-            return {
-                getFilteredHistory: getFilteredHistory
-            };
+                return {
+                    getFilteredHistory: getFilteredHistory
+                };
 
-        }());
+            }());
 
-        return ChromeHistory;
+            return ChromeHistory;
 
-    }]);
+        }]);
 
 }());

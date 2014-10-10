@@ -9,17 +9,24 @@
         var PATHS = {
             APP: "app/",
             DIST: "dist/",
+            TEST: "test/",
             ICONS: "icons/",
             TMP: "tmp/",
             BROWSER_EXTENSIONS: "browser-extensions/",
             FIREFOX: "firefox/",
             FIREFOX_APP: "firefox/data/",
             CHROME: "chrome/",
-            CHROME_ZIP_NAME: "dbhplugin_chrome.zip"
+            CHROME_ZIP_NAME: "dbhplugin_chrome.zip",
+            CHROME_DIST_FOLDER: "dbhplugin_chrome/",
+            CHROME_CRX_FOLDER: "crx/"
         };
 
         // Load grunt tasks
         require('load-grunt-tasks')(grunt);
+
+
+        // Time how long tasks take. Can help when optimizing build times
+        //require('time-grunt')(grunt);
 
         grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
         grunt.loadNpmTasks('grunt-karma');
@@ -28,42 +35,60 @@
         grunt.loadNpmTasks('grunt-crx');
         grunt.loadNpmTasks('grunt-contrib-compress');
         grunt.loadNpmTasks('grunt-contrib-watch');
-
+        grunt.loadNpmTasks('grunt-sync');
 
         // Project Configuration
         grunt.initConfig({
+            config: {
+                distchrome: PATHS.DIST +  PATHS.CHROME +  PATHS.CHROME_DIST_FOLDER
+            },
             concurrent: {
-                dev: ['watch:scripts'],
+                dev: ['watch', 'karma:unit-server'],
                 options: {
                     logConcurrentOutput: true
                 }
             },
+            // Watches files for changes and runs tasks based on the changed files
             watch: {
-                scripts: {
-                    files: ['Gruntfile.js', 'app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
+                'src': {
+                    files: [PATHS.APP + '**' , '!' + PATHS.APP  + '**/js/**', '!' + PATHS.APP  +'**/lib/**'],
+                    tasks: ['sync:dist-chrome-folder']
+                },
+                'js-src': {
+                    files: [PATHS.APP + 'js/{,*/}*.js'],
+                    tasks: ['sync:dist-chrome-folder', 'jshint']
+                },
+                'js-test': {
+                    files: [PATHS.TEST + 'specs/{,*/}*.js'],
                     tasks: ['jshint']
                 }
             },
+
+            // Grunt server and debug server setting
+            connect: {
+                options: {
+                    port: 9000,
+                    livereload: 35729,
+                    // change this to '0.0.0.0' to access the server from outside
+                    hostname: 'localhost'
+                },
+                chrome: {
+                    options: {
+                        open: false,
+                        base: [
+                            '<%= config.distchrome %>'
+                        ]
+                    }
+                }
+            },
             jshint: {
-                all: ['Gruntfile.js', 'app/js/{,*/}*.js', 'test/specs/{,*/}*.js'],
+                all: [
+                    'app/js/{,*/}*.js',
+                    'test/specs/{,*/}*.js'
+                ],
                 options: {
                     reporter: require('jshint-stylish'),
-                    "globals": {
-                        "require": true,
-                        "angular": false,
-                        "afterEach": false,
-                        "beforeEach": false,
-                        "module": false,
-                        "describe": false,
-                        "expect": false,
-                        "inject": false,
-                        "it": false,
-                        "jasmine": false,
-                        "runs": false,
-                        "spyOn": false,
-                        "waitsFor": false,
-                        "xdescribe": false
-                    }
+                    jshintrc: '.jshintrc'
                 }
             },
             copy: {
@@ -89,6 +114,15 @@
                     ]
                 }
             },
+            sync: {
+                'dist-chrome-folder': {
+                    files: [
+                        {expand: true, cwd: PATHS.APP, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER},
+                        {expand: true, cwd: PATHS.ICONS, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER},
+                        {expand: true, cwd: PATHS.BROWSER_EXTENSIONS + PATHS.CHROME, src: ['**'], dest: PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER }
+                    ]
+                }
+            },
             "mozilla-addon-sdk": {
                 '1_17': {
                     options: {
@@ -108,7 +142,7 @@
             crx: {
                 plugin: {
                     "src": PATHS.TMP + PATHS.CHROME,
-                    "dest": PATHS.DIST + PATHS.CHROME,
+                    "dest": PATHS.DIST + PATHS.CHROME + PATHS.CHROME_CRX_FOLDER,
                     "privateKey": "./chrome.pem"
                 }
             },
@@ -146,19 +180,31 @@
                 }
             },
             clean: {
-                'dist-chrome': [PATHS.DIST + PATHS.CHROME],
+                'dist-chrome-zip': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_ZIP_NAME],
+                'dist-chrome-folder': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_DIST_FOLDER],
+                'dist-chrome-crx': [PATHS.DIST + PATHS.CHROME + PATHS.CHROME_CRX_FOLDER],
                 'tmp-chrome': [PATHS.TMP + PATHS.CHROME],
                 'dist-firefox': [PATHS.DIST + PATHS.FIREFOX],
                 'tmp-firefox': [PATHS.TMP + PATHS.FIREFOX],
                 'tmp-app': [PATHS.TMP + PATHS.APP]
+
             },
             karma: {
-                unit: {
+                options: {
                     configFile: 'karma.conf.js'
                 },
-                'unit-ci': {
-                    configFile: 'karma.conf.js',
+                'unit-server': {
+
+                },
+                'unit-chrome': {
+                    browsers: ['Chrome']
+                },
+                'unit-run': {
                     singleRun: true
+                },
+                'unit-run-coverage': {
+                    singleRun: true,
+                    reporters: ['progress', 'coverage']
                 }
             },
             coverage: {
@@ -176,9 +222,24 @@
         });
 
 
-        // Grunt internal tasks
 
-        grunt.registerTask('dist:firefox', 'Internal. Do not use directly', [
+        // GRUNT PUBLIC TASKS
+
+
+        //------------------- BUILD & DIST ----------------
+
+        grunt.registerTask('build-app', 'Builds the project', [
+            'clean:tmp-app',
+            'useminPrepare',
+            'copy:tmp-app',
+            'concat',
+            'uglify',
+            'rev',
+            'usemin'
+        ]);
+
+        grunt.registerTask('dist-firefox', 'Builds the project and prepare the package for firefox (xpi)', [
+            'build-app',
             'clean:dist-firefox',
             'copy:tmp-firefox',
             'mozilla-addon-sdk',
@@ -186,59 +247,49 @@
             'clean:tmp-firefox'
         ]);
 
-        grunt.registerTask('dist:chrome', 'Internal. Do not use directly', [
-            'clean:dist-chrome',
+        grunt.registerTask('dist-chrome-zip', 'Builds the project and prepare the package for chrome (zip)', [
+            'clean:dist-chrome-zip',
+            'build-app',
             'copy:tmp-chrome',
-            //'crx:plugin'
             'compress:chrome',
             'clean:tmp-chrome'
         ]);
 
-
-        // Grunt public tasks
-
-        grunt.registerTask('build-app', 'Builds the project', [
-            'clean:tmp-app',
-            'useminPrepare',
-            'copy:tmp-app',
-            'concat',
-            //'uglify',
-            'rev',
-            'usemin'
-        ]);
-
-        grunt.registerTask('dist-firefox', 'Builds the project and prepare the package for firefox (xpi)', [
+        grunt.registerTask('dist-chrome-crx', 'Builds the project and prepare the package for chrome (crx)', [
+            'clean:dist-chrome-crx',
             'build-app',
-            'dist:firefox'
+            'copy:tmp-chrome',
+            'crx:plugin',
+            'clean:tmp-chrome'
         ]);
 
-        grunt.registerTask('dist-chrome', 'Builds the project and prepare the package for chrome (folder)', [
-            'build-app',
-            'dist:chrome'
-        ]);
+        //------------------- DEV ----------------
 
-        grunt.registerTask('dist-all', 'Builds the project and prepare the package for firefox (xpi) and chrome (folder)', [
-            'build-app',
-            'dist:firefox',
-            'dist:chrome'
-        ]);
-
-        grunt.registerTask('dev', 'dev stuff: Keeps listening for file updates to run jshint, ...TODO: open chrome, livereload, sass compilation', [
+        grunt.registerTask('dev-chrome', 'dev environment for chrome: jshint, run tests, sync source to dist/chrome folder', [
             'jshint',
+            'sync:dist-chrome-folder',
             'concurrent:dev'
         ]);
 
-        grunt.registerTask('test', 'Keeps listening for file updates to run tests', [
-            'karma:unit'
+        //------------------- TEST ----------------
+
+        grunt.registerTask('test-server', 'Keeps listening for file updates to run tests', [
+            'karma:unit-server'
         ]);
 
-        grunt.registerTask('test-ci', 'Launches the tests and coveralls for ci', [
-            'jshint',
-            'karma:unit-ci'
+        grunt.registerTask('test-chrome', 'Keeps listening for file updates to run tests in chrome for debugging', [
+            'karma:unit-chrome'
         ]);
+
+        grunt.registerTask('test-ci', 'Launches the tests and coveralls for the ci build', [
+            'jshint',
+            'karma:unit-run-coverage'
+        ]);
+
+        //------------------- DEFAULT ----------------
 
         grunt.registerTask('default', [
-            'dev'
+            'dev-chrome'
         ]);
 
     };

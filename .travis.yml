@@ -12,8 +12,9 @@ before_script:
 - npm install
 - bower install
 script:
-- npm run-script test-ci
-- npm run-script dist
+- grunt test-ci
+- grunt dist-firefox
+- grunt dist-chrome-zip
 after_script:
 - npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls
 before_deploy:
