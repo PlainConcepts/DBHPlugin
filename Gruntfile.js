@@ -265,7 +265,7 @@
 
         //------------------- DEV ----------------
 
-        grunt.registerTask('dev-chrome', 'dev environment for chrome', [
+        grunt.registerTask('dev-chrome', 'dev environment for chrome: jshint, run tests, sync source to dist/chrome folder', [
             'jshint',
             'sync:dist-chrome-folder',
             'concurrent:dev'
@@ -281,7 +281,7 @@
             'karma:unit-chrome'
         ]);
 
-        grunt.registerTask('test-run', 'Launches the tests and coveralls', [
+        grunt.registerTask('test-ci', 'Launches the tests and coveralls for the ci build', [
             'jshint',
             'karma:unit-run-coverage'
         ]);
