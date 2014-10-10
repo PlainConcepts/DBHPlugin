@@ -6,7 +6,7 @@
 </head>
 <body ng-controller="HistoryController">
     <div>
-        <h1>Filtered Urls:</h1>
+        <h1>Filtered Urls - New:</h1>
         <ul>
             <li ng-repeat="filteredUrl in filteredUrls">
                <span>title:</span><span ng-bind="filteredUrl.title"></span>
@@ -22,7 +22,7 @@
     <!--endbuild-->
     <!--build:js(app) js/scripts.js-->
     <script src="./js/app.js" type="text/javascript"></script>
-    <script src="./js/chromeHistoryService.js"></script>
+    <script src="./js/chromeHistoryService.js" type="text/javascript"></script>
     <script src="./js/historyServiceFactory.js" type="text/javascript"></script>
     <script src="./js/historyController.js" type="text/javascript"></script>
     <!--endbuild-->

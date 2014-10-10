@@ -9,7 +9,8 @@ module.exports = function (config) {
             'app/js/app.js',
             'app/js/**/*.js',
 
-            'test/specs/app/**/*.js'
+            'test/specs/app/**/*.js',
+            'test/specs/mocks/**/*.js'
         ],
 
         preprocessors: {
