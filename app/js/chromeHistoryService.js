@@ -1,5 +1,6 @@
 ﻿
 (function () {
+    'use strict';
 
     angular
         .module('DBHPluginApp')
@@ -9,10 +10,11 @@
                 var deferred = $q.defer();
 
                 if (chrome.history) {
-                    var query = {
+                    var query;
+                    query = {
                         text: '',
                         startTime: 0,
-                        endTime: (new Date).getTime()
+                        endTime: (new Date()).getTime()
                     };
 
                     chrome.history.search(query, function (results) {

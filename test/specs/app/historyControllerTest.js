@@ -1,4 +1,6 @@
-﻿describe('historyControllerTest', function () {
+﻿/*globals TestUtils*/
+
+describe('historyControllerTest', function () {
     'use strict';
 
     var $scope, $window;

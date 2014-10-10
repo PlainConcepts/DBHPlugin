@@ -1,6 +1,9 @@
 ﻿var TestUtils = TestUtils || {};
 
 TestUtils.ChromeMock = function(){
+
+    'use strict';
+
     var history = {
         search: function (query, callback) {
             callback(
@@ -15,5 +18,5 @@ TestUtils.ChromeMock = function(){
 
     return {
         history: history
-    }
+    };
 };
