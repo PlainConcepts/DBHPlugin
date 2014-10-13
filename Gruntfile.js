@@ -263,6 +263,12 @@
             'clean:tmp-chrome'
         ]);
 
+        grunt.registerTask('ci', 'CI Task (Run the tests and generate the package for chrome and firefox)', [
+            'test-ci',
+            'dist-firefox',
+            'dist-chrome-zip'
+        ]);
+
         //------------------- DEV ----------------
 
         grunt.registerTask('dev-chrome', 'dev environment for chrome: jshint, run tests, sync source to dist/chrome folder', [

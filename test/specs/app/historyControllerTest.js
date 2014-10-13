@@ -1,9 +1,13 @@
-﻿/*globals TestUtils*/
+﻿/* globals TestUtils */
+/* jshint camelcase: false */
+
 
 describe('historyControllerTest', function () {
+
     'use strict';
 
-    var $scope, $window;
+    var $scope,
+        $window;
 
     beforeEach(function () {
         module('DBHPluginApp');
