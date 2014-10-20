@@ -40,6 +40,5 @@ module.exports = function (config) {
             subdir: 'coverage/'
         }
 
-
     });
 };
