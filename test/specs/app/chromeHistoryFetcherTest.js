@@ -1,12 +1,12 @@
 /* jshint camelcase: false */
 
-describe('chromeHistoryService Tests', function () {
+describe('chromeHistoryFetcher Tests', function () {
 
     'use strict';
 
     var $windowMock,
         $timeout,
-        chromeHistoryService;
+        chromeHistoryFetcher;
 
     beforeEach(function () {
         $windowMock = {};
@@ -16,16 +16,16 @@ describe('chromeHistoryService Tests', function () {
         });
     });
 
-    beforeEach(inject(function (_$timeout_, _chromeHistoryService_) {
+    beforeEach(inject(function (_$timeout_, _chromeHistoryFetcher_){
         $timeout = _$timeout_;
-        chromeHistoryService = _chromeHistoryService_;
+        chromeHistoryFetcher = _chromeHistoryFetcher_;
     }));
 
     describe('if not chrome defined', function () {
 
-        it('getFilteredHistory rejects an error', function (done) {
+        it('getHistory rejects an error', function (done) {
 
-            chromeHistoryService.getFilteredHistory().then(
+            chromeHistoryFetcher.getHistory().then(
                 function success() {
                 },
                 function error(value) {
@@ -45,9 +45,9 @@ describe('chromeHistoryService Tests', function () {
             $windowMock.chrome = {};
         });
 
-        it('getFilteredHistory rejects an error', function (done) {
+        it('getHistory rejects an error', function (done) {
 
-            chromeHistoryService.getFilteredHistory().then(
+            chromeHistoryFetcher.getHistory().then(
                 function success() {
                 },
                 function error(value) {
@@ -76,9 +76,9 @@ describe('chromeHistoryService Tests', function () {
                 }};
         });
 
-        it('getFilteredHistory resolves history data', function (done) {
+        it('getHistory resolves history data', function (done) {
 
-            chromeHistoryService.getFilteredHistory().then(
+            chromeHistoryFetcher.getHistory().then(
                 function success(data) {
                     expect(data).toBe(history);
                 }

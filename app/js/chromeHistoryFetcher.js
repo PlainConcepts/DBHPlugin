@@ -1,11 +1,11 @@
 ﻿(function () {
     'use strict';
 
-    function chromeHistoryService($q, $window) {
+    function chromeHistoryFetcher($q, $window) {
 
         var chrome = $window.chrome;
 
-        var getFilteredHistory = function () {
+        var getHistory = function () {
             var deferred = $q.defer();
 
             if (chrome && chrome.history) {
@@ -29,15 +29,15 @@
         };
 
         return {
-            getFilteredHistory: getFilteredHistory
+            getHistory: getHistory
         };
 
     }
 
-    chromeHistoryService.$inject = ['$q', '$window'];
+    chromeHistoryFetcher.$inject = ['$q', '$window'];
 
     angular
         .module('DBHPluginApp')
-        .factory('chromeHistoryService', chromeHistoryService);
+        .factory('chromeHistoryFetcher', chromeHistoryFetcher);
 
 }());

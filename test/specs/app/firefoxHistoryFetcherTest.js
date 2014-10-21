@@ -1,12 +1,12 @@
 /* jshint camelcase: false */
 
-describe('firefoxHistoryService Tests', function () {
+describe('firefoxHistoryFetcher Tests', function () {
 
     'use strict';
 
     var $windowMock,
         $timeout,
-        firefoxHistoryService;
+        firefoxHistoryFetcher;
 
     beforeEach(function () {
         $windowMock = {};
@@ -16,14 +16,14 @@ describe('firefoxHistoryService Tests', function () {
         });
     });
 
-    beforeEach(inject(function (_$timeout_, _firefoxHistoryService_) {
+    beforeEach(inject(function (_$timeout_, _firefoxHistoryFetcher_) {
         $timeout = _$timeout_;
-        firefoxHistoryService = _firefoxHistoryService_;
+        firefoxHistoryFetcher = _firefoxHistoryFetcher_;
     }));
 
-    it('getFilteredHistory resolves test data', function (done) {
+    it('getHistory resolves test data', function (done) {
 
-        firefoxHistoryService.getFilteredHistory().then(
+        firefoxHistoryFetcher.getHistory().then(
             function success(data) {
                 expect(data).toEqual(['test']);
             }

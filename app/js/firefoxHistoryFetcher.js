@@ -1,24 +1,24 @@
 ﻿(function () {
     'use strict';
 
-    function firefoxHistoryService($q) {
+    function firefoxHistoryFetcher($q) {
 
-        var getFilteredHistory = function () {
+        var getHistory = function () {
             var deferred = $q.defer();
             deferred.resolve(['test']);
             return deferred.promise;
         };
 
         return {
-            getFilteredHistory: getFilteredHistory
+            getHistory: getHistory
         };
 
     }
 
-    firefoxHistoryService.$inject = ['$q'];
+    firefoxHistoryFetcher.$inject = ['$q'];
 
     angular
         .module('DBHPluginApp')
-        .factory('firefoxHistoryService', firefoxHistoryService);
+        .factory('firefoxHistoryFetcher', firefoxHistoryFetcher);
 
 }());

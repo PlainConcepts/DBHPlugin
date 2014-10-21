@@ -5,7 +5,7 @@
 
         var baseUrl = config.apiBaseUrl || '';
 
-        function getUrls() {
+        function getUrlsToMatch() {
             var deferred = $q.defer();
 
             $http.get(baseUrl + 'urls')
@@ -23,7 +23,7 @@
         }
 
         return {
-            getUrls: getUrls
+            getUrlsToMatch: getUrlsToMatch
         };
     }
 

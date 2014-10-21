@@ -1,7 +1,8 @@
 ﻿(function () {
     'use strict';
 
-    function historyServiceFactory($window, chromeHistoryService, firefoxHistoryService) {
+    function historyFetcher($window, chromeHistoryFetcher, firefoxHistoryFetcher) {
+
         function browserIsChrome() {
             return typeof $window.chrome !== 'undefined';
         }
@@ -11,16 +12,16 @@
         }
 
         if (browserIsChrome()) {
-            return chromeHistoryService;
+            return chromeHistoryFetcher;
         }
         else if (browserIsFirefox()) {
-            return firefoxHistoryService;
+            return firefoxHistoryFetcher;
         }
     }
 
-    historyServiceFactory.$inject = ['$window', 'chromeHistoryService', 'firefoxHistoryService'];
+    historyFetcher.$inject = ['$window', 'chromeHistoryFetcher', 'firefoxHistoryFetcher'];
 
     angular
         .module('DBHPluginApp')
-        .factory('historyServiceFactory', historyServiceFactory);
+        .factory('historyFetcher', historyFetcher);
 })();

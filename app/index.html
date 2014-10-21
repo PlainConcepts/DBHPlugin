@@ -6,6 +6,7 @@
 </head>
 <body ng-controller="HistoryController">
     <div>
+        <button ng-click="sendFilteredHistory()" ng-disabled="filteredUrls.length === 0">Send</button>
         <h1>Filtered Urls - New:</h1>
         <ul>
             <li ng-repeat="filteredUrl in filteredUrls">
@@ -22,9 +23,9 @@
     <!--build:js(app) js/scripts.js-->
     <script src="./js/app.js" type="text/javascript"></script>
     <script src="./js/config.js" type="text/javascript"></script>
-    <script src="./js/chromeHistoryService.js" type="text/javascript"></script>
-    <script src="./js/firefoxHistoryService.js" type="text/javascript"></script>
-    <script src="./js/historyServiceFactory.js" type="text/javascript"></script>
+    <script src="js/chromeHistoryFetcher.js" type="text/javascript"></script>
+    <script src="js/firefoxHistoryFetcher.js" type="text/javascript"></script>
+    <script src="./js/historyAnalyzer.js" type="text/javascript"></script>
     <script src="./js/dbhDataContext.js" type="text/javascript"></script>
     <script src="./js/historyController.js" type="text/javascript"></script>
     <!--endbuild-->

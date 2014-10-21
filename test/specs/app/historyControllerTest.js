@@ -8,7 +8,7 @@ describe('historyController Test', function () {
         $window,
         $q,
         dbhDataContextMock,
-        historyFactoryMock;
+        historyAnalyzerMock;
 
     beforeEach(function () {
         module('DBHPluginApp');
@@ -18,10 +18,10 @@ describe('historyController Test', function () {
         $scope = $rootScope.$new();
         $window = _$window_;
         $q = _$q_;
-        dbhDataContextMock = jasmine.createSpyObj('dbhDataContextMock', ['getUrls']);
-        historyFactoryMock = jasmine.createSpyObj('historyServiceFactory', ['getFilteredHistory']);
+        dbhDataContextMock = jasmine.createSpyObj('dbhDataContextMock', ['getUrlsToMatch']);
+        historyAnalyzerMock = jasmine.createSpyObj('historyAnalyzer', ['getFilteredHistory']);
 
-        dbhDataContextMock.getUrls.and.callFake(function () {
+        dbhDataContextMock.getUrlsToMatch.and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve([
                 { ico: 'google', urls: [ '*://*.google.tld/search*'] }
@@ -29,7 +29,7 @@ describe('historyController Test', function () {
             return deferred.promise;
         });
 
-        historyFactoryMock.getFilteredHistory.and.callFake(function () {
+        historyAnalyzerMock.getFilteredHistory.and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve([
                 { name: 'Google', 'url': 'http://www.google.com'}
@@ -40,7 +40,7 @@ describe('historyController Test', function () {
         $controller('HistoryController', {
             '$scope': $scope,
             'dbhDataContext': dbhDataContextMock,
-            'historyServiceFactory': historyFactoryMock
+            'historyAnalyzer': historyAnalyzerMock
         });
     }));
 

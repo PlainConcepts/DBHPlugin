@@ -21,7 +21,7 @@ describe('dbhDataContext test', function () {
         dbhDataContext = _dbhDataContext_;
     }));
 
-    describe('getUrls', function () {
+    describe('getUrlsToMatch', function () {
 
         var apiUrls = [
             { ico: 'google', urls: [ '*://*.google.tld/search*'] }
@@ -32,7 +32,7 @@ describe('dbhDataContext test', function () {
             $httpBackend.when('GET', url).respond(200, apiUrls);
             $httpBackend.expectGET(url);
 
-            dbhDataContext.getUrls().then(
+            dbhDataContext.getUrlsToMatch().then(
                 function success(data) {
                     expect(data).toEqual(apiUrls);
                 }
@@ -47,7 +47,7 @@ describe('dbhDataContext test', function () {
             $httpBackend.when('GET', url).respond(500);
             $httpBackend.expectGET(url);
 
-            dbhDataContext.getUrls().then(
+            dbhDataContext.getUrlsToMatch().then(
                 function success() {
                 },
                 function error(data) {
