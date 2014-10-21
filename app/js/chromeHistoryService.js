@@ -8,7 +8,7 @@
         var getFilteredHistory = function () {
             var deferred = $q.defer();
 
-            if (chrome.history) {
+            if (chrome && chrome.history) {
                 var query;
                 query = {
                     text: '',

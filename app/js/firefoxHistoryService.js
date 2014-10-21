@@ -5,7 +5,7 @@
 
         var getFilteredHistory = function () {
             var deferred = $q.defer();
-            deferred.resolve();
+            deferred.resolve(['test']);
             return deferred.promise;
         };
 

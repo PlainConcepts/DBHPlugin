@@ -1,6 +1,6 @@
 ﻿/* jshint camelcase: false */
 
-describe('historyControllerTest', function () {
+describe('historyController Test', function () {
 
     'use strict';
 
