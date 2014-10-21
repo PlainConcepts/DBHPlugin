@@ -27,9 +27,9 @@ describe('firefoxHistoryService Tests', function () {
             function success(data) {
                 expect(data).toEqual(['test']);
             }
-        ).finally(done); // IMPORTANT: `done` must be called after promise is resolved
+        ).finally(done);
 
-        $timeout.flush(); // Force digest cycle to resolve promises
+        $timeout.flush();
 
     });
 

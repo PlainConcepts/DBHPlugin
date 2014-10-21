@@ -13,7 +13,8 @@
                 query = {
                     text: '',
                     startTime: 0,
-                    endTime: (new Date()).getTime()
+                    endTime: (new Date()).getTime(),
+                    maxResults: 2147483647
                 };
 
                 chrome.history.search(query, function (results) {

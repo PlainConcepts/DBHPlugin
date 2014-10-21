@@ -31,9 +31,9 @@ describe('chromeHistoryService Tests', function () {
                 function error(value) {
                     expect(value).toBe('chrome.history not available');
                 }
-            ).finally(done); // IMPORTANT: `done` must be called after promise is resolved
+            ).finally(done);
 
-            $timeout.flush(); // Force digest cycle to resolve promises
+            $timeout.flush();
 
         });
 
@@ -53,9 +53,9 @@ describe('chromeHistoryService Tests', function () {
                 function error(value) {
                     expect(value).toBe('chrome.history not available');
                 }
-            ).finally(done); // IMPORTANT: `done` must be called after promise is resolved
+            ).finally(done);
 
-            $timeout.flush(); // Force digest cycle to resolve promises
+            $timeout.flush();
 
         });
 
@@ -63,8 +63,8 @@ describe('chromeHistoryService Tests', function () {
 
     describe('if chrome.history is defined', function () {
 
-        var history =[
-            {name: 'Google', 'url': 'http://www.google.com'}
+        var history = [
+            {id: '1234', url: 'http://www.google.com', title: 'Google', lastVisitTime: 1234, visitCount: 2, typedCount: 2}
         ];
 
         beforeEach(function () {
@@ -82,9 +82,9 @@ describe('chromeHistoryService Tests', function () {
                 function success(data) {
                     expect(data).toBe(history);
                 }
-            ).finally(done); // IMPORTANT: `done` must be called after promise is resolved
+            ).finally(done);
 
-            $timeout.flush(); // Force digest cycle to resolve promises
+            $timeout.flush();
 
         });
 

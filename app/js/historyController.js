@@ -1,15 +1,21 @@
 (function () {
     'use strict';
 
-    function HistoryController($scope, historyServiceFactory) {
+    function HistoryController($scope, dbhDataContext, historyServiceFactory) {
+
         $scope.filteredUrls = [];
-        historyServiceFactory.getFilteredHistory()
-            .then(function (filteredUrls) {
-                $scope.filteredUrls = filteredUrls;
-            });
+
+        dbhDataContext.getUrls().then(
+            function (data) {
+                historyServiceFactory.getFilteredHistory(data)
+                    .then(function (filteredUrls) {
+                        $scope.filteredUrls = filteredUrls;
+                    });
+            }
+        );
     }
 
-    HistoryController.$inject = ['$scope', 'historyServiceFactory'];
+    HistoryController.$inject = ['$scope', 'dbhDataContext', 'historyServiceFactory'];
 
     angular.module('DBHPluginApp')
         .controller('HistoryController', HistoryController);

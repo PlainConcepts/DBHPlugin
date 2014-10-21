@@ -2,6 +2,10 @@
 
     'use strict';
 
-    angular.module('DBHPluginApp', []);
+    var plugin = angular.module('DBHPluginApp', []);
+
+    plugin.config(function ($logProvider) {
+        $logProvider.debugEnabled(true);
+    });
 
 }());
