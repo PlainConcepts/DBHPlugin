@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function developerResourcesHistoryFinder($q) {
+    function developerResourcesHistoryFinder($q, $log, historyFetcher) {
 
         var siteCatalog,
             regexCache = [];
@@ -58,6 +58,7 @@
 
         function buildRexExCache(urlsToMatch) {
             if (regexCache.length === 0) {
+                $log.debug('building regexCache...');
                 siteCatalog = urlsToMatch;
                 for (var i = 0; i < urlsToMatch.length; i++) {
                     var site = urlsToMatch[i];
@@ -66,36 +67,213 @@
                         regexCache[pattern] = convert2RegExp(pattern);
                     }
                 }
+            } else {
+                $log.debug('regexCache built. Not build required');
             }
         }
 
-        /*function getSiteKind(url) {
-            if (isGoogleSearch(url)) {
-                return "google";
+        function isGoogleSearch(url) {
+            return (url.indexOf('google') !== -1 && url.indexOf('/search?') !== -1) ||
+                (url.indexOf('google') !== -1 && url.indexOf('output=search') !== -1 ) ||
+                (url.indexOf('google') !== -1 && url.indexOf('&q=') !== -1 );
+        }
+
+        function getParameters(href) {
+            var regex = /[?&]([^=#]+)=([^&#]*)/g,
+                url = href,
+                params = {},
+                match;
+            while (match = regex.exec(url)) {
+                params[match[1]] = match[2];
+            }
+            return params;
+        }
+
+        function isGoogleRedirect(url) {
+            return (url.indexOf('google') !== -1 && url.indexOf('/url') !== -1);
+        }
+
+        function mustIncludeCandidate(item) {
+            if (isGoogleSearch(item.url)) {
+                return true;
             }
 
-            for (var i = 0; i < siteCatalog.length; i++) {
-                var site = siteCatalog[i];
-                if (site.ico == "")
-                    continue;
-
-                for (var u = 0; u < site.urls.length; u++) {
-                    var pattern = site.urls[u];
-                    var regex = regexCache[pattern];
-                    if (regex && url.match(regex)) {
-                        return site.ico;
-                    }
+            // included in site catalog
+            for (var pattern in regexCache) {
+                var regex = regexCache[pattern];
+                if (item.url.match(regex)) {
+                    return true;
                 }
             }
-            return "";
-        }*/
 
-        function process(urlsToMatch/*, rawHistory*/) {
+            return false;
+        }
+
+        function filterAdjacent(visits) {
+
+            if (visits.length < 2) {
+                return visits;
+            }
+
+            var included = [];
+            included.push(visits[0]);
+
+            for (var i = 0; i < visits.length - 1; i++) {
+                var v = visits[i];
+                var next = visits[i + 1];
+
+                if (v.url === next.url) {
+                    continue;
+                }
+                else if (isGoogleSearch(v.url) && v.title === next.title) {
+                    continue;
+                }
+                else {
+                    included.push(v);
+                }
+            }
+
+            return included;
+        }
+
+        function getLocalTime(googleTime) {
+            return moment(parseInt(googleTime));
+        }
+
+        function compareVisitTimesInSeconds(a, b) {
+            return ( getLocalTime(a).valueOf() - getLocalTime(b).valueOf()) / 1000;
+        }
+
+        function filterGoogleSearchNearSite(secondsThreshold, visits) {
+            var included = [];
+
+            for (var i = 0; i < visits.length; i++) {
+                var v = visits[i];
+                if (isGoogleSearch(v.url)) {
+                    var searchTime = v.time;
+                    var docTime = visits[visits.length - 1].time + 100000;
+                    for (var x = i + 1; x < visits.length; x++) {
+                        var d = visits[x];
+                        if (!isGoogleSearch(d.url)) {
+                            docTime = d.time;
+                            break;
+                        }
+                    }
+
+                    if (compareVisitTimesInSeconds(docTime, searchTime) < secondsThreshold) {
+                        included.push(v);
+                    }
+                }
+                else {
+                    included.push(v);
+                }
+            }
+            return included;
+        }
+
+        /*function isSiteCatalogUrl(url) {
+         for (var pattern in regexCache) {
+         var regex = regexCache[pattern];
+         if (url.match(regex)) {
+         return true;
+         }
+         }
+
+         return false;
+         }*/
+
+        /*function getSiteKind(url) {
+         if (isGoogleSearch(url)) {
+         return 'google';
+         }
+
+         for (var i = 0; i < siteCatalog.length; i++) {
+         var site = siteCatalog[i];
+         if (site.ico === '') {
+         continue;
+         }
+
+         for (var u = 0; u < site.urls.length; u++) {
+         var pattern = site.urls[u];
+         var regex = regexCache[pattern];
+         if (regex && url.match(regex)) {
+         return site.ico;
+         }
+         }
+         }
+         return '';
+         }*/
+
+        function finder(rawHistory) {
             var deferred = $q.defer();
+            var promises = [];
+
+            angular.forEach(rawHistory, function (historyItem) {
+                if (historyItem.url) {
+                    promises.push(historyFetcher.getVisits(historyItem.url, historyItem.title));
+                }
+            });
+
+            $q.all(promises).then(
+                function (results) {
+                    var filteredHistory = [];
+                    var visitCount = 0;
+
+                    angular.forEach(results, function (historyUrlVisits) {
+                        visitCount += historyUrlVisits.length;
+                        var last = null;
+
+                        angular.forEach(historyUrlVisits, function (visitItem) {
+                            // Often, multiple requests are made, resulting in duplicate visits -- only include first in sequential visits.
+                            if (!last || (last.title !== visitItem.title && last.url !== visitItem.url)) {
+                                // Google search often includes redirects, which sets title of site to be visited next.  Replace with query.
+                                if (isGoogleSearch(visitItem.url)) {
+                                    var params = getParameters(visitItem.url);
+                                    if (params.q) {
+                                        visitItem.title = decodeURIComponent(params.q.replace(/\+/g, ' '));
+                                    }
+                                }
+
+                                visitItem.isGoogleRedirect = isGoogleRedirect(visitItem.url);
+
+                                filteredHistory.push(visitItem);
+                            }
+                            last = visitItem;
+                        });
+                    });
+
+                    filteredHistory.sort(function (a, b) {
+                        return a.time - b.time;
+                    });
+
+                    deferred.resolve(filteredHistory);
+                }
+            );
+
+            return deferred.promise;
+        }
+
+        function process(apiSiteCatalog, rawHistory) {
+            var deferred = $q.defer();
+
             // Build regex cache
-            buildRexExCache(urlsToMatch);
+            if (apiSiteCatalog && apiSiteCatalog.length > 0) {
+                buildRexExCache(apiSiteCatalog);
+            } else {
+                deferred.reject('no site catalog to work with!');
+            }
 
             // Do find
+            finder(rawHistory).then(
+                function success(candidates) {
+                    var filtered = candidates.filter(mustIncludeCandidate);
+                    filtered = filterAdjacent(filtered);
+                    /**** Pending to verify ****/
+                    //filtered = filterGoogleSearchNearSite(30, filtered);
+                    deferred.resolve(filtered);
+                }
+            );
+
 
             return deferred.promise;
         }
@@ -105,7 +283,7 @@
         };
     }
 
-    developerResourcesHistoryFinder.$inject = ['$q'];
+    developerResourcesHistoryFinder.$inject = ['$q', '$log', 'historyFetcher'];
 
     angular
         .module('DBHPluginApp')
