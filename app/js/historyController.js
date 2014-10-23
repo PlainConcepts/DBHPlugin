@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function HistoryController($scope, dbhDataContext, historyAnalyzer) {
+    function HistoryController($scope, dbhDataContext, historyAnalyzer, moment) {
 
         $scope.filteredUrls = [];
 
@@ -11,7 +11,7 @@
 
         dbhDataContext.getUrlsToMatch().then(
             function success(urlsToMatch) {
-                historyAnalyzer.getFilteredHistory(urlsToMatch)
+                historyAnalyzer.getDeveloperResources(urlsToMatch, moment().subtract(5, 'days'), moment())
                     .then(function (filteredUrls) {
                         $scope.filteredUrls = filteredUrls;
                     });
@@ -19,7 +19,7 @@
         );
     }
 
-    HistoryController.$inject = ['$scope', 'dbhDataContext', 'historyAnalyzer'];
+    HistoryController.$inject = ['$scope', 'dbhDataContext', 'historyAnalyzer', 'moment'];
 
     angular.module('DBHPluginApp')
         .controller('HistoryController', HistoryController);

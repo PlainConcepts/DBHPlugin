@@ -5,15 +5,14 @@
 
         var chrome = $window.chrome;
 
-        var getHistory = function () {
+        function getHistory(startTime, endTime) {
             var deferred = $q.defer();
 
             if (chrome && chrome.history) {
-                var query;
-                query = {
+                var query = {
                     text: '',
-                    startTime: 0,
-                    endTime: (new Date()).getTime(),
+                    startTime: startTime.valueOf(),
+                    endTime: endTime.valueOf(),
                     maxResults: 2147483647
                 };
 
@@ -26,10 +25,31 @@
             }
 
             return deferred.promise;
-        };
+        }
+
+        function getVisits(url, title) {
+            var deferred = $q.defer();
+
+            var query = {'url': url};
+
+            if (chrome && chrome.history) {
+                chrome.history.getVisits(query, function (visitItems) {
+                        deferred.resolve(visitItems.map(function (item) {
+                            return {time: item.visitTime, title: title, url: url};
+                        }));
+                    }
+                );
+            }
+            else {
+                deferred.reject('chrome.history not available');
+            }
+
+            return deferred.promise;
+        }
 
         return {
-            getHistory: getHistory
+            getHistory: getHistory,
+            getVisits: getVisits
         };
 
     }

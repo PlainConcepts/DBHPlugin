@@ -19,7 +19,7 @@ describe('historyController Test', function () {
         $window = _$window_;
         $q = _$q_;
         dbhDataContextMock = jasmine.createSpyObj('dbhDataContextMock', ['getUrlsToMatch']);
-        historyAnalyzerMock = jasmine.createSpyObj('historyAnalyzer', ['getFilteredHistory']);
+        historyAnalyzerMock = jasmine.createSpyObj('historyAnalyzer', ['getDeveloperResources']);
 
         dbhDataContextMock.getUrlsToMatch.and.callFake(function () {
             var deferred = $q.defer();
@@ -29,7 +29,7 @@ describe('historyController Test', function () {
             return deferred.promise;
         });
 
-        historyAnalyzerMock.getFilteredHistory.and.callFake(function () {
+        historyAnalyzerMock.getDeveloperResources.and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve([
                 { name: 'Google', 'url': 'http://www.google.com'}

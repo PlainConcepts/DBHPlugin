@@ -3,14 +3,21 @@
 
     function firefoxHistoryFetcher($q) {
 
-        var getHistory = function () {
+        function getHistory(/*startTime, endTime*/) {
             var deferred = $q.defer();
             deferred.resolve(['test']);
             return deferred.promise;
-        };
+        }
+
+        function getVisits(/*url, title*/) {
+            var deferred = $q.defer();
+            deferred.resolve(['test']);
+            return deferred.promise;
+        }
 
         return {
-            getHistory: getHistory
+            getHistory: getHistory,
+            getVisits: getVisits
         };
 
     }
