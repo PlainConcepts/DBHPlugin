@@ -9,7 +9,7 @@
             return deferred.promise;
         }
 
-        function getVisits(/*url, title*/) {
+        function getVisits(/*url, title, startTime, endTime*/) {
             var deferred = $q.defer();
             deferred.resolve(['test']);
             return deferred.promise;

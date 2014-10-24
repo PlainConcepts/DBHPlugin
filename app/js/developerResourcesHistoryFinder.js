@@ -56,19 +56,20 @@
             return new RegExp(res + '$', 'i');
         }
 
-        function buildRexExCache(urlsToMatch) {
+        function buildRexExCache(apiSiteCatalog) {
             if (regexCache.length === 0) {
-                $log.debug('building regexCache...');
-                siteCatalog = urlsToMatch;
-                for (var i = 0; i < urlsToMatch.length; i++) {
-                    var site = urlsToMatch[i];
+                $log.debug('[developerResourcesHistoryFinder]: start building regexCache');
+                siteCatalog = apiSiteCatalog;
+                for (var i = 0; i < apiSiteCatalog.length; i++) {
+                    var site = apiSiteCatalog[i];
                     for (var u = 0; u < site.urls.length; u++) {
                         var pattern = site.urls[u];
                         regexCache[pattern] = convert2RegExp(pattern);
                     }
                 }
+                $log.debug('[developerResourcesHistoryFinder]: regexCache built!');
             } else {
-                $log.debug('regexCache built. Not build required');
+                $log.debug('[developerResourcesHistoryFinder]: regexCache built. Not build required');
             }
         }
 
@@ -200,7 +201,7 @@
             return deferred.promise;
         }
 
-        function process(apiSiteCatalog, rawHistory) {
+        function process(apiSiteCatalog, startTime, endTime) {
             var deferred = $q.defer();
 
             // Build regex cache
@@ -211,15 +212,28 @@
             }
 
             // Do find
-            finder(rawHistory).then(
-                function success(candidates) {
-                    var filtered = candidates.filter(mustIncludeCandidate);
-                    filtered = filterAdjacent(filtered);
-                    filtered = filterGoogleSearchNearSite(30, filtered);
-                    deferred.resolve(filtered);
+            historyFetcher.getHistory(startTime, endTime).then(
+                function success(rawHistory){
+                    $log.debug('[developerResourcesHistoryFinder]:  start finding developer resources in raw history');
+                    finder(rawHistory).then(
+                        function success(candidates) {
+                            $log.debug('[developerResourcesHistoryFinder]:  got developer resources candidates. count: ' + candidates.length);
+
+                            var filtered = candidates.filter(mustIncludeCandidate);
+                            $log.debug('[developerResourcesHistoryFinder]:  mustInclude filter. count: ' + filtered.length);
+
+                            filtered = filterAdjacent(filtered);
+                            $log.debug('[developerResourcesHistoryFinder]:  filter adjacent visits. count: ' + filtered.length);
+
+                            filtered = filterGoogleSearchNearSite(30, filtered);
+                            $log.debug('[developerResourcesHistoryFinder]:  filter developer resource near search. count ' + filtered.length);
+                            $log.debug('[developerResourcesHistoryFinder]:  process done!');
+
+                            deferred.resolve(filtered);
+                        }
+                    );
                 }
             );
-
 
             return deferred.promise;
         }

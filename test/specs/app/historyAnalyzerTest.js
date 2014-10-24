@@ -11,19 +11,16 @@ describe('historyAnalyzer Test', function () {
         return moment(time).format('dddd, MMMM D YYYY');
     }
 
-    var historyFetcherMock,
-        developerResourcesHistoryFinderMock,
+    var developerResourcesHistoryFinderMock,
         $q,
         $timeout,
         moment,
         historyAnalyzer;
 
     beforeEach(function () {
-        historyFetcherMock = jasmine.createSpyObj('historyFetcher', ['getHistory']);
         developerResourcesHistoryFinderMock = jasmine.createSpyObj('developerResourcesHistoryFinder', ['process']);
 
         module('DBHPluginApp', function servicesOverride($provide) {
-            $provide.value('historyFetcher', historyFetcherMock);
             $provide.value('developerResourcesHistoryFinder', developerResourcesHistoryFinderMock);
         });
     });
@@ -40,11 +37,6 @@ describe('historyAnalyzer Test', function () {
         var developerResources;
 
         beforeEach(function () {
-            historyFetcherMock.getHistory.and.callFake(function () {
-                var deferred = $q.defer();
-                deferred.resolve([]);
-                return deferred.promise;
-            });
             developerResourcesHistoryFinderMock.process.and.callFake(function () {
                 var deferred = $q.defer();
                 deferred.resolve(developerResources);

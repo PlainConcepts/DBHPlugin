@@ -18,10 +18,10 @@ describe('historyController Test', function () {
         $scope = $rootScope.$new();
         $window = _$window_;
         $q = _$q_;
-        dbhDataContextMock = jasmine.createSpyObj('dbhDataContextMock', ['getUrlsToMatch']);
+        dbhDataContextMock = jasmine.createSpyObj('dbhDataContextMock', ['getApiSiteCatalog']);
         historyAnalyzerMock = jasmine.createSpyObj('historyAnalyzer', ['getDeveloperResources']);
 
-        dbhDataContextMock.getUrlsToMatch.and.callFake(function () {
+        dbhDataContextMock.getApiSiteCatalog.and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve([
                 { ico: 'google', urls: [ '*://*.google.tld/search*'] }

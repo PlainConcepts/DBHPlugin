@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Developer Browsing History</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
 </head>
 <body ng-controller="HistoryController">
     <div>
@@ -10,9 +11,16 @@
         <h1>Filtered Urls - New:</h1>
         <ul>
             <li ng-repeat="filteredUrl in filteredUrls">
-               <span>title:</span><span ng-bind="filteredUrl.title"></span>
-               &nbsp;
-               <span>url:</span><span ng-bind="filteredUrl.url"></span>
+                <div ng-if="filteredUrl.needsDateHeader">
+                    <div class="dateHeader" ng-bind="filteredUrl.friendlyDate"></div>
+                </div>
+                <div ng-if="filteredUrl.spacer">
+                    <div class="divider"></div>
+                </div>
+                <div class="visitSection">
+                    <span class="visitTime" ng-bind="filteredUrl.friendlyTime"></span>
+                    <span class="title"><a target="#" ng-href="filteredUrl.url"  ng-class="classKind">{{filteredUrl.title}}</a></span>
+                </div>
             </li>
         </ul>
     </div>
@@ -24,10 +32,14 @@
     <!--build:js(app) js/scripts.js-->
     <script src="./js/app.js" type="text/javascript"></script>
     <script src="./js/config.js" type="text/javascript"></script>
+    <script src="./js/moment.js" type="text/javascript"></script>
+    <script src="./js/urlAnalyzer.js" type="text/javascript"></script>
     <script src="js/chromeHistoryFetcher.js" type="text/javascript"></script>
     <script src="js/firefoxHistoryFetcher.js" type="text/javascript"></script>
+    <script src="js/historyFetcher.js" type="text/javascript"></script>
     <script src="./js/historyAnalyzer.js" type="text/javascript"></script>
     <script src="./js/dbhDataContext.js" type="text/javascript"></script>
+    <script src="./js/developerResourcesHistoryFinder.js" type="text/javascript"></script>
     <script src="./js/historyController.js" type="text/javascript"></script>
     <!--endbuild-->
 </body>

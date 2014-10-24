@@ -11,7 +11,7 @@ describe('developerResourcesHistoryFinder Test', function () {
         developerResourcesHistoryFinder;
 
     beforeEach(function () {
-        historyFetcherMock = jasmine.createSpyObj('historyFetcher', ['getVisits']);
+        historyFetcherMock = jasmine.createSpyObj('historyFetcher', ['getHistory', 'getVisits']);
 
         module('DBHPluginApp', function servicesOverride($provide) {
             $provide.value('historyFetcher', historyFetcherMock);
@@ -41,6 +41,11 @@ describe('developerResourcesHistoryFinder Test', function () {
             ];
 
         beforeEach(function () {
+            historyFetcherMock.getHistory.and.callFake(function () {
+                var deferred = $q.defer();
+                deferred.resolve(rawHistory);
+                return deferred.promise;
+            });
             historyFetcherMock.getVisits.and.callFake(function (url) {
                 var deferred = $q.defer();
                 deferred.resolve(visitsToUrls[url]);
@@ -48,19 +53,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             });
         });
 
-        /**
-         * rawHistoryItem format
-         {
-                    id: '1234', ### Not used
-                    url: 'http://msdn.microsoft.com/test',
-                    title: 'test',
-                    lastVisitTime: 1,  ### Not used
-                    visitCount: 1,  ### Not used
-                    typedCount: 0  ### Not used
-                }
-         * */
-
-        xit('returns empty array if no history', function (done) {
+        it('returns empty array if no history', function (done) {
             rawHistory = [];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -72,7 +65,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('returns only visits from history items with url', function (done) {
+        it('returns only visits from history items with url', function (done) {
             rawHistory = [{url: '', title: 'test'}];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -84,7 +77,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('visits with same url and title are added only one time', function (done) {
+        it('visits with same url and title are added only one time', function (done) {
             rawHistory = [{url: 'http://msdn.microsoft.com/test', title: 'test'}];
             var time1 = moment().toDate().valueOf(),
                 time2 = moment().subtract(5, 'h').toDate().valueOf();
@@ -156,7 +149,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('if google redirect is detected mark the visit as a redirect, but google redirects are not shown', function (done) {
+        it('if google redirect is detected mark the visit as a redirect, but google redirects are not shown', function (done) {
             rawHistory = [
                 {
                     id: '1234',
@@ -188,7 +181,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('must exclude equal adjacent visits with same url', function (done) {
+        it('must exclude equal adjacent visits with same url', function (done) {
             rawHistory = [
                 {
                     id: '1234',

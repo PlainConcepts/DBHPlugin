@@ -29,7 +29,7 @@ describe('chromeHistoryFetcher Tests', function () {
                 function success() {
                 },
                 function error(value) {
-                    expect(value).toBe('chrome.history not available');
+                    expect(value).toBe('[chromeHistoryFetcher]:  chrome.history not available');
                 }
             ).finally(done);
 
@@ -65,7 +65,7 @@ describe('chromeHistoryFetcher Tests', function () {
                 function success() {
                 },
                 function error(value) {
-                    expect(value).toBe('chrome.history not available');
+                    expect(value).toBe('[chromeHistoryFetcher]:  chrome.history not available');
                 }
             ).finally(done);
 

@@ -32,7 +32,7 @@ describe('dbhDataContext test', function () {
             $httpBackend.when('GET', url).respond(200, apiUrls);
             $httpBackend.expectGET(url);
 
-            dbhDataContext.getUrlsToMatch().then(
+            dbhDataContext.getApiSiteCatalog().then(
                 function success(data) {
                     expect(data).toEqual(apiUrls);
                 }
@@ -47,7 +47,7 @@ describe('dbhDataContext test', function () {
             $httpBackend.when('GET', url).respond(500);
             $httpBackend.expectGET(url);
 
-            dbhDataContext.getUrlsToMatch().then(
+            dbhDataContext.getApiSiteCatalog().then(
                 function success() {
                 },
                 function error(data) {

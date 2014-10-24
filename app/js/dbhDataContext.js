@@ -5,16 +5,16 @@
 
         var baseUrl = config.apiBaseUrl || '';
 
-        function getUrlsToMatch() {
+        function getApiSiteCatalog() {
             var deferred = $q.defer();
 
             $http.get(baseUrl + 'urls')
                 .success(function (data) {
-                    $log.debug('match urls fetched from dbh api');
+                    $log.debug('[dbhDataContext]: siteCatalog fetched from dbh api');
                     deferred.resolve(data);
                 })
                 .error(function (data) {
-                    $log.error('error fetching match urls from dbh api. ' + data ? data : '');
+                    $log.error('[dbhDataContext]: error fetching match urls from dbh api. ' + data ? data : '');
                     deferred.reject();
                 });
 
@@ -22,7 +22,7 @@
         }
 
         return {
-            getUrlsToMatch: getUrlsToMatch
+            getApiSiteCatalog: getApiSiteCatalog
         };
     }
 

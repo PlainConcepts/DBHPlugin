@@ -9,9 +9,9 @@
 
         };
 
-        dbhDataContext.getUrlsToMatch().then(
-            function success(urlsToMatch) {
-                historyAnalyzer.getDeveloperResources(urlsToMatch, moment().subtract(5, 'days'), moment())
+        dbhDataContext.getApiSiteCatalog().then(
+            function success(apiSiteCatalog) {
+                historyAnalyzer.getDeveloperResources(apiSiteCatalog, moment().subtract(5, 'days'), moment())
                     .then(function (filteredUrls) {
                         $scope.filteredUrls = filteredUrls;
                     });

@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function historyAnalyzer($q, moment, historyFetcher, developerResourcesHistoryFinder) {
+    function historyAnalyzer($q, $log, moment, developerResourcesHistoryFinder) {
 
         var thresholdInHours = 60 * 60 * 0.5;
 
@@ -49,19 +49,15 @@
             return visits;
         }
 
-        function getDeveloperResources(urlsToMatch, startTime, endTime) {
+        function getDeveloperResources(apiSiteCatalog, startTime, endTime) {
             var deferred = $q.defer();
+            $log.debug('[historyAnalyzer]: start getDeveloperResources. startTime: ' + moment(startTime).format('L') + ' - endTime: ' + moment(endTime).format('L'));
 
-            // Read browser history for specified dates
-            historyFetcher.getHistory(startTime, endTime).then(
-                function success(rawHistory) {
-                    // Find developer resources in raw history
-                    developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
-                        function success(developerResources) {
-                            // return visits from developer resources
-                            deferred.resolve(buildVisits(developerResources));
-                        }
-                    );
+            developerResourcesHistoryFinder.process(apiSiteCatalog, startTime, endTime).then(
+                function success(developerResources) {
+                    $log.debug('[historyAnalyzer]: start building visits. count: ' + developerResources.length);
+                    // return visits from developer resources
+                    deferred.resolve(buildVisits(developerResources));
                 }
             );
 
@@ -73,7 +69,7 @@
         };
     }
 
-    historyAnalyzer.$inject = ['$q', 'moment', 'historyFetcher', 'developerResourcesHistoryFinder'];
+    historyAnalyzer.$inject = ['$q', '$log', 'moment', 'developerResourcesHistoryFinder'];
 
     angular
         .module('DBHPluginApp')
