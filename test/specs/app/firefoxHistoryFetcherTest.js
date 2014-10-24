@@ -21,15 +21,35 @@ describe('firefoxHistoryFetcher Tests', function () {
         firefoxHistoryFetcher = _firefoxHistoryFetcher_;
     }));
 
-    it('getHistory resolves test data', function (done) {
+    describe('getHistory', function(){
 
-        firefoxHistoryFetcher.getHistory().then(
-            function success(data) {
-                expect(data).toEqual(['test']);
-            }
-        ).finally(done);
+        it('getHistory resolves test data', function (done) {
 
-        $timeout.flush();
+            firefoxHistoryFetcher.getHistory().then(
+                function success(data) {
+                    expect(data).toEqual(['test']);
+                }
+            ).finally(done);
+
+            $timeout.flush();
+
+        });
+
+    });
+
+    describe('getVisits', function(){
+
+        it('getVisits resolves test data', function (done) {
+
+            firefoxHistoryFetcher.getVisits().then(
+                function success(data) {
+                    expect(data).toEqual(['test']);
+                }
+            ).finally(done);
+
+            $timeout.flush();
+
+        });
 
     });
 
