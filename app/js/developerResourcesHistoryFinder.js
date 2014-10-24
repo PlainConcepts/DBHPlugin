@@ -152,13 +152,13 @@
             return included;
         }
 
-        function finder(rawHistory) {
+        function finder(rawHistory, startTime, endTime) {
             var deferred = $q.defer();
             var promises = [];
 
             angular.forEach(rawHistory, function (historyItem) {
                 if (historyItem.url) {
-                    promises.push(historyFetcher.getVisits(historyItem.url, historyItem.title));
+                    promises.push(historyFetcher.getVisits(historyItem.url, historyItem.title, startTime, endTime));
                 }
             });
 
@@ -213,9 +213,9 @@
 
             // Do find
             historyFetcher.getHistory(startTime, endTime).then(
-                function success(rawHistory){
+                function success(rawHistory) {
                     $log.debug('[developerResourcesHistoryFinder]:  start finding developer resources in raw history');
-                    finder(rawHistory).then(
+                    finder(rawHistory, startTime, endTime).then(
                         function success(candidates) {
                             $log.debug('[developerResourcesHistoryFinder]:  got developer resources candidates. count: ' + candidates.length);
 

@@ -4,13 +4,17 @@
     function urlAnalyzer() {
 
         function isGoogleSearch(url) {
-            return (url.indexOf('google') !== -1 && url.indexOf('/search?') !== -1) ||
+            var result = ((url.indexOf('google') !== -1 && url.indexOf('/search?') !== -1) ||
                 (url.indexOf('google') !== -1 && url.indexOf('output=search') !== -1 ) ||
-                (url.indexOf('google') !== -1 && url.indexOf('&q=') !== -1 );
+                (url.indexOf('google') !== -1 && url.indexOf('&q=') !== -1 )) &&
+                (isGoogleRedirect(url) === false);
+
+            return result;
         }
 
         function isGoogleRedirect(url) {
-            return (url.indexOf('google') !== -1 && url.indexOf('/url') !== -1);
+            var result = (url.indexOf('google') !== -1 && url.indexOf('/url') !== -1);
+            return result;
         }
 
         function getUrlParameters(href) {

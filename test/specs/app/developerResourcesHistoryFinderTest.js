@@ -53,7 +53,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             });
         });
 
-        it('returns empty array if no history', function (done) {
+        xit('returns empty array if no history', function (done) {
             rawHistory = [];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -65,7 +65,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        it('returns only visits from history items with url', function (done) {
+        xit('returns only visits from history items with url', function (done) {
             rawHistory = [{url: '', title: 'test'}];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -77,7 +77,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        it('visits with same url and title are added only one time', function (done) {
+        xit('visits with same url and title are added only one time', function (done) {
             rawHistory = [{url: 'http://msdn.microsoft.com/test', title: 'test'}];
             var time1 = moment().toDate().valueOf(),
                 time2 = moment().subtract(5, 'h').toDate().valueOf();
@@ -100,7 +100,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        it('if google search detected and search has q parameter visits are set with formatted q parameter title', function (done) {
+        xit('if google search detected and search has q parameter visits are set with formatted q parameter title', function (done) {
             rawHistory = [
                 {
                     url: 'https://www.google.es/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8&q=.net',
@@ -152,12 +152,8 @@ describe('developerResourcesHistoryFinder Test', function () {
         it('if google redirect is detected mark the visit as a redirect, but google redirects are not shown', function (done) {
             rawHistory = [
                 {
-                    id: '1234',
                     url: 'https://www.google.es/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0CCoQFjAB&url=http%3A%2F%2Fstackoverflow.com%2Fquestions%2F14863026%2Fjavascript-regex-find-all-possible-matches-even-in-already-captured-matches&ei=qPpIVPaKDsLKOZbcgJgL&usg=AFQjCNGKJJVOYhoq-kfcy4gkxNxBXhkyyw&sig2=VPCIVBZ_eD0xbAo8FscEWA&bvm=bv.77880786,d.ZWU',
-                    title: 'test',
-                    lastVisitTime: 1,
-                    visitCount: 1,
-                    typedCount: 0
+                    title: 'test'
                 }
             ];
             var time = moment().toDate().valueOf();
@@ -181,15 +177,11 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        it('must exclude equal adjacent visits with same url', function (done) {
+        xit('must exclude equal adjacent visits with same url', function (done) {
             rawHistory = [
                 {
-                    id: '1234',
                     url: 'http://msdn.microsoft.com/test',
-                    title: 'test',
-                    lastVisitTime: 1,
-                    visitCount: 1,
-                    typedCount: 0
+                    title: 'test'
                 },
                 {
                     id: '1234',
@@ -219,6 +211,29 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
+        xit('must exclude chrome extensions urls', function (done) {
+            rawHistory = [
+                {
+                    url: 'unsafe:chrome-extension://glcllnjdljpjaiomldcdnaficmakabon/filteredUrl.url',
+                    title: 'aa'
+                }
+            ];
+            var time = moment().toDate().valueOf();
+            visitsToUrls = {
+                'unsafe:chrome-extension://glcllnjdljpjaiomldcdnaficmakabon/filteredUrl.url': [
+                    {time: time, title: 'aa', url: 'unsafe:chrome-extension://glcllnjdljpjaiomldcdnaficmakabon/filteredUrl.url'}
+                ]
+            };
+            var expectedVisits = [];
+
+            developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
+                function success(visits) {
+                    expect(visits).toEqual(expectedVisits);
+                }
+            ).finally(done);
+
+            $timeout.flush();
+        });
     });
 
 });
