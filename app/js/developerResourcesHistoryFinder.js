@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function developerResourcesHistoryFinder($q, $log, moment, historyFetcher) {
+    function developerResourcesHistoryFinder($q, $log, moment, historyFetcher, urlAnalyzer) {
 
         var siteCatalog,
             regexCache = [];
@@ -72,31 +72,8 @@
             }
         }
 
-        function isGoogleSearch(url) {
-            return (url.indexOf('google') !== -1 && url.indexOf('/search?') !== -1) ||
-                (url.indexOf('google') !== -1 && url.indexOf('output=search') !== -1 ) ||
-                (url.indexOf('google') !== -1 && url.indexOf('&q=') !== -1 );
-        }
-
-        function getParameters(href) {
-            var regex = /[?&]([^=#]+)=([^&#]*)/g,
-                url = href,
-                params = {},
-                match;
-            match = regex.exec(url);
-            while (match) {
-                params[match[1]] = match[2];
-                match = regex.exec(url);
-            }
-            return params;
-        }
-
-        function isGoogleRedirect(url) {
-            return (url.indexOf('google') !== -1 && url.indexOf('/url') !== -1);
-        }
-
         function mustIncludeCandidate(item) {
-            if (isGoogleSearch(item.url)) {
+            if (urlAnalyzer.isGoogleSearch(item.url)) {
                 return true;
             }
 
@@ -127,7 +104,7 @@
                 if (previous.url === current.url) {
                     continue;
                 }
-                else if (isGoogleSearch(previous.url) && previous.title === current.title) {
+                else if (urlAnalyzer.isGoogleSearch(previous.url) && previous.title === current.title) {
                     continue;
                 }
                 else {
@@ -151,12 +128,12 @@
 
             for (var i = 0; i < visits.length; i++) {
                 var v = visits[i];
-                if (isGoogleSearch(v.url)) {
+                if (urlAnalyzer.isGoogleSearch(v.url)) {
                     var searchTime = v.time;
                     var docTime = visits[visits.length - 1].time + 100000;
                     for (var x = i + 1; x < visits.length; x++) {
                         var d = visits[x];
-                        if (!isGoogleSearch(d.url)) {
+                        if (!urlAnalyzer.isGoogleSearch(d.url)) {
                             docTime = d.time;
                             break;
                         }
@@ -173,39 +150,6 @@
             }
             return included;
         }
-
-        /*function isSiteCatalogUrl(url) {
-         for (var pattern in regexCache) {
-         var regex = regexCache[pattern];
-         if (url.match(regex)) {
-         return true;
-         }
-         }
-
-         return false;
-         }*/
-
-        /*function getSiteKind(url) {
-         if (isGoogleSearch(url)) {
-         return 'google';
-         }
-
-         for (var i = 0; i < siteCatalog.length; i++) {
-         var site = siteCatalog[i];
-         if (site.ico === '') {
-         continue;
-         }
-
-         for (var u = 0; u < site.urls.length; u++) {
-         var pattern = site.urls[u];
-         var regex = regexCache[pattern];
-         if (regex && url.match(regex)) {
-         return site.ico;
-         }
-         }
-         }
-         return '';
-         }*/
 
         function finder(rawHistory) {
             var deferred = $q.defer();
@@ -230,14 +174,14 @@
                             // Often, multiple requests are made, resulting in duplicate visits -- only include first in sequential visits.
                             if (!last || (last.title !== visitItem.title && last.url !== visitItem.url)) {
                                 // Google search often includes redirects, which sets title of site to be visited next.  Replace with query.
-                                if (isGoogleSearch(visitItem.url)) {
-                                    var params = getParameters(visitItem.url);
+                                if (urlAnalyzer.isGoogleSearch(visitItem.url)) {
+                                    var params = urlAnalyzer.getUrlParameters(visitItem.url);
                                     if (params.q) {
                                         visitItem.title = decodeURIComponent(params.q.replace(/\+/g, ' '));
                                     }
                                 }
 
-                                visitItem.isGoogleRedirect = isGoogleRedirect(visitItem.url);
+                                visitItem.isGoogleRedirect = urlAnalyzer.isGoogleRedirect(visitItem.url);
 
                                 filteredHistory.push(visitItem);
                             }
@@ -271,7 +215,6 @@
                 function success(candidates) {
                     var filtered = candidates.filter(mustIncludeCandidate);
                     filtered = filterAdjacent(filtered);
-                    /**** Pending to verify ****/
                     filtered = filterGoogleSearchNearSite(30, filtered);
                     deferred.resolve(filtered);
                 }
@@ -286,7 +229,7 @@
         };
     }
 
-    developerResourcesHistoryFinder.$inject = ['$q', '$log', 'moment', 'historyFetcher'];
+    developerResourcesHistoryFinder.$inject = ['$q', '$log', 'moment', 'historyFetcher', 'urlAnalyzer'];
 
     angular
         .module('DBHPluginApp')
