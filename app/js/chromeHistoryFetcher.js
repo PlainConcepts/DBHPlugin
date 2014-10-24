@@ -3,7 +3,8 @@
 
     function chromeHistoryFetcher($q, $log, $window) {
 
-        var chrome = $window.chrome;
+        var chrome = $window.chrome,
+            maxIntValue = 2147483647;
 
         function getHistory(startTime, endTime) {
             var deferred = $q.defer();
@@ -14,7 +15,7 @@
                     text: '',
                     startTime: startTime.valueOf(),
                     endTime: endTime.valueOf(),
-                    maxResults: 2147483647
+                    maxResults: maxIntValue
                 };
 
                 chrome.history.search(query, function (results) {

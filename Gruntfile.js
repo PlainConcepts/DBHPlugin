@@ -112,6 +112,11 @@
                     files: [
                         {expand: true, cwd: PATHS.APP, src: ['**', '!**/js/**', '!**/lib/**'], dest: PATHS.TMP + PATHS.APP  }
                     ]
+                },
+                'prepare-ci':{
+                    files: [
+                        {expand: false, src: PATHS.APP +'js/config/config.pre.js', dest: PATHS.APP + 'js/config/config.js'  }
+                    ]
                 }
             },
             sync: {
@@ -265,6 +270,7 @@
 
         grunt.registerTask('ci', 'CI Task (Run the tests and generate the package for chrome and firefox)', [
             'test-ci',
+            'copy:prepare-ci',
             'dist-firefox',
             'dist-chrome-zip'
         ]);
