@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function developerResourcesHistoryFinder($q, $log, historyFetcher) {
+    function developerResourcesHistoryFinder($q, $log, moment, historyFetcher) {
 
         var siteCatalog,
             regexCache = [];
@@ -83,8 +83,10 @@
                 url = href,
                 params = {},
                 match;
-            while (match = regex.exec(url)) {
+            match = regex.exec(url);
+            while (match) {
                 params[match[1]] = match[2];
+                match = regex.exec(url);
             }
             return params;
         }
@@ -118,18 +120,18 @@
             var included = [];
             included.push(visits[0]);
 
-            for (var i = 0; i < visits.length - 1; i++) {
-                var v = visits[i];
-                var next = visits[i + 1];
+            for (var i = 1; i < visits.length; i++) {
+                var previous = visits[i - 1];
+                var current = visits[i];
 
-                if (v.url === next.url) {
+                if (previous.url === current.url) {
                     continue;
                 }
-                else if (isGoogleSearch(v.url) && v.title === next.title) {
+                else if (isGoogleSearch(previous.url) && previous.title === current.title) {
                     continue;
                 }
                 else {
-                    included.push(v);
+                    included.push(current);
                 }
             }
 
@@ -137,7 +139,7 @@
         }
 
         function getLocalTime(googleTime) {
-            return moment(parseInt(googleTime));
+            return moment(parseInt(googleTime, 10));
         }
 
         function compareVisitTimesInSeconds(a, b) {
@@ -160,7 +162,8 @@
                         }
                     }
 
-                    if (compareVisitTimesInSeconds(docTime, searchTime) < secondsThreshold) {
+                    var differenceInSeconds = compareVisitTimesInSeconds(docTime, searchTime);
+                    if (differenceInSeconds < secondsThreshold) {
                         included.push(v);
                     }
                 }
@@ -269,7 +272,7 @@
                     var filtered = candidates.filter(mustIncludeCandidate);
                     filtered = filterAdjacent(filtered);
                     /**** Pending to verify ****/
-                    //filtered = filterGoogleSearchNearSite(30, filtered);
+                    filtered = filterGoogleSearchNearSite(30, filtered);
                     deferred.resolve(filtered);
                 }
             );
@@ -283,7 +286,7 @@
         };
     }
 
-    developerResourcesHistoryFinder.$inject = ['$q', '$log', 'historyFetcher'];
+    developerResourcesHistoryFinder.$inject = ['$q', '$log', 'moment', 'historyFetcher'];
 
     angular
         .module('DBHPluginApp')
