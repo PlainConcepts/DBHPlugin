@@ -238,7 +238,6 @@
             'useminPrepare',
             'copy:tmp-app',
             'concat',
-            'uglify',
             'rev',
             'usemin'
         ]);
