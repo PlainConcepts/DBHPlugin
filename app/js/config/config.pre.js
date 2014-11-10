@@ -2,7 +2,7 @@
     'use strict';
 
     var config = {
-        apiBaseUrl: 'http://dbhapi-test.azurewebsites.net/api/'
+        apiBaseUrl: 'http://browserhistory.azurewebsites.net/api/'
     };
 
     var plugin = angular.module('DBHPluginApp');
