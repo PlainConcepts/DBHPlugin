@@ -18,8 +18,8 @@
                 </div>
                 <div class="visitSection">
                     <span class="visitTime" ng-bind="filteredUrl.friendlyTime"></span>
-                    <span class="visitIco"> <img src="{{filteredUrl.ico}}"> </span>
-                    <span class="title"><a target="#" ng-href="filteredUrl.url"  ng-class="classKind">{{filteredUrl.title}}</a></span>
+                    <span class="visitIco"> <img ng-src="{{filteredUrl.ico}}"> </span>
+                    <span class="title"><a target="_blank" ng-href="{{filteredUrl.url}}"  ng-class="classKind">{{filteredUrl.title}}</a></span>
                 </div>
             </li>
         </ul>
