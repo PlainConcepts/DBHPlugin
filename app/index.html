@@ -7,8 +7,7 @@
 </head>
 <body ng-controller="HistoryController">
     <div>
-        <button ng-click="sendFilteredHistory()" ng-disabled="filteredUrls.length === 0">Send</button>
-        <h1>Filtered Urls - New:</h1>
+        <h1>Developer history:</h1>
         <ul>
             <li ng-repeat="filteredUrl in filteredUrls">
                 <div ng-if="filteredUrl.needsDateHeader">

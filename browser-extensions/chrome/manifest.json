@@ -1,6 +1,6 @@
 {
     "name": "Developer Browser History",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "manifest_version": 2,
     "description": "Developer Browser History",
     "background": {
