@@ -5,9 +5,9 @@
         return {
             link: function postLink(scope, element, attr) {
                 var imageUrl = config.apiBaseUrl + 'ico/' + attr.urlIco;
-                element.attr("src", imageUrl);
+                element.attr('src', imageUrl);
             }
-        }
+        };
     };
 
     urlIco.$inject = ['config'];
