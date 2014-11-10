@@ -5,11 +5,11 @@
 
         var thresholdInHours = 60 * 60 * 0.5;
 
-        function buildVisit(title, url, siteType, time, spacer, needsDateHeader) {
+        function buildVisit(title, url, ico, time, spacer, needsDateHeader) {
             return {
                 title: title,
                 url: url,
-                classKind: siteType,
+                ico: ico,
                 spacer: spacer,
                 needsDateHeader: needsDateHeader,
                 friendlyTime: moment(time).format('LT'),
@@ -39,7 +39,7 @@
                     else if (deltaInSeconds > thresholdInHours) {
                         spacer = true;
                     }
-                    visits.push(buildVisit(item.title, item.url, item.siteType, item.time, spacer, needsDateHeader));
+                    visits.push(buildVisit(item.title, item.url, item.ico, item.time, spacer, needsDateHeader));
                     last = item.time;
                 }
             );

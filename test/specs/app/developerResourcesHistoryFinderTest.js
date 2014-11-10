@@ -32,10 +32,12 @@ describe('developerResourcesHistoryFinder Test', function () {
             urlsToMatch = [
                 {
                     ico: 'stackoverflow',
+                    name: 'stackoverflow',
                     urls: ['*://stackoverflow.tld/*']
                 },
                 {
                     ico: 'msdn',
+                    name: 'msdn',
                     urls: ['*://msdn.microsoft.com/*', '*://code.msdn.microsoft.com/*', '*://social.msdn.microsoft.com/*']
                 }
             ];
@@ -53,7 +55,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             });
         });
 
-        xit('returns empty array if no history', function (done) {
+        it('returns empty array if no history', function (done) {
             rawHistory = [];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -65,7 +67,26 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('returns only visits from history items with url', function (done) {
+        it('returns visits whith the site name and ico', function (done) {
+            rawHistory = [{url: 'http://msdn.microsoft.com/test', title: 'test'}];
+            visitsToUrls = {
+                'http://msdn.microsoft.com/test': [
+                    {title: 'test', url: 'http://msdn.microsoft.com/test'}
+                ]
+            };
+            var expectedVisit = {url: 'http://msdn.microsoft.com/test', title: 'test', siteName: 'msdn', ico: 'msdn'};
+
+            developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
+                function success(visits) {
+                    expect(visits[0].siteName).toEqual(expectedVisit.siteName);
+                    expect(visits[0].ico).toEqual(expectedVisit.ico);
+                }
+            ).finally(done);
+
+            $timeout.flush();
+        });
+
+        it('returns only visits from history items with url', function (done) {
             rawHistory = [{url: '', title: 'test'}];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
@@ -77,7 +98,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('visits with same url and title are added only one time', function (done) {
+        it('visits with same url and title are added only one time', function (done) {
             rawHistory = [{url: 'http://msdn.microsoft.com/test', title: 'test'}];
             var time1 = moment().toDate().valueOf(),
                 time2 = moment().subtract(5, 'h').toDate().valueOf();
@@ -87,20 +108,20 @@ describe('developerResourcesHistoryFinder Test', function () {
                     {time: time2, title: 'test', url: 'http://msdn.microsoft.com/test'}
                 ]
             };
-            var expectedVisits = [
-                {time: time1, title: 'test', url: 'http://msdn.microsoft.com/test', isGoogleRedirect: false}
-            ];
+            var expectedVisit = {time: time1, title: 'test', url: 'http://msdn.microsoft.com/test'};
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
                 function success(visits) {
-                    expect(visits).toEqual(expectedVisits);
+                    expect(visits.length).toBe(1);
+                    expect(visits[0].url).toEqual(expectedVisit.url);
+                    expect(visits[0].title).toEqual(expectedVisit.title);
                 }
             ).finally(done);
 
             $timeout.flush();
         });
 
-        xit('if google search detected and search has q parameter visits are set with formatted q parameter title', function (done) {
+        it('if google search detected and search has q parameter visits are set with formatted q parameter title', function (done) {
             rawHistory = [
                 {
                     url: 'https://www.google.es/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8&q=.net',
@@ -122,27 +143,26 @@ describe('developerResourcesHistoryFinder Test', function () {
                     }
                 ],
                 'http://http://msdn.microsoft.com/test': [
-                    {time: time2, title: 'test', url: 'http://http://msdn.microsoft.com/test'}
+                    {time: time2, title: 'test', url: 'http://msdn.microsoft.com/test'}
                 ]
             };
             var expectedVisits = [
                 {
                     time: time1,
                     title: '.net',
-                    url: 'https://www.google.es/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8&q=.net',
-                    isGoogleRedirect: false
+                    url: 'https://www.google.es/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8&q=.net'
                 },
                 {
                     time: time2,
                     title: 'test',
-                    url: 'http://http://msdn.microsoft.com/test',
-                    isGoogleRedirect: false
+                    url: 'http://msdn.microsoft.com/test'
                 }
             ];
 
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
                 function success(visits) {
-                    expect(visits).toEqual(expectedVisits);
+                    expect(visits[0].title).toEqual(expectedVisits[0].title);
+                    expect(visits[1].title).toEqual(expectedVisits[1].title);
                 }
             ).finally(done);
 
@@ -177,7 +197,7 @@ describe('developerResourcesHistoryFinder Test', function () {
             $timeout.flush();
         });
 
-        xit('must exclude equal adjacent visits with same url', function (done) {
+        it('must exclude equal adjacent visits with same url', function (done) {
             rawHistory = [
                 {
                     url: 'http://msdn.microsoft.com/test',
@@ -198,20 +218,16 @@ describe('developerResourcesHistoryFinder Test', function () {
                     {time: time, title: 'test', url: 'http://msdn.microsoft.com/test'}
                 ]
             };
-            var expectedVisits = [
-                {time: time, title: 'test', url: 'http://msdn.microsoft.com/test', isGoogleRedirect: false}
-            ];
-
             developerResourcesHistoryFinder.process(urlsToMatch, rawHistory).then(
                 function success(visits) {
-                    expect(visits).toEqual(expectedVisits);
+                    expect(visits.length).toBe(1);
                 }
             ).finally(done);
 
             $timeout.flush();
         });
 
-        xit('must exclude chrome extensions urls', function (done) {
+        it('must exclude chrome extensions urls', function (done) {
             rawHistory = [
                 {
                     url: 'unsafe:chrome-extension://glcllnjdljpjaiomldcdnaficmakabon/filteredUrl.url',
